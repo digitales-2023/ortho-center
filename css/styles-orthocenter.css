@@ -1,0 +1,34 @@
+.fondoLogin{
+  background-image: url("../view/img/fondo-login.png");
+  background-repeat: round;
+  background-attachment: fixed;
+  background-size: contain;
+}
+
+.fondoLoginCard{
+  background-color: #1EABB9;
+}
+
+.cardImage{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 125px;
+}
+
+.imagenLogin{
+  width: 280;
+  height: 80px;
+  margin-top: 5px;
+}
+
+.buttonLogin{
+  background-color: #1EABB9;
+}
+
+.imageNavBar{
+  margin-top: 8px;
+  width: 140;
+  height: 45px;
+  padding-left: 30px;
+}
