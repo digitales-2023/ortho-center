@@ -14,7 +14,7 @@ class PDFHistoriaClinica extends TFPDF
   function Header()
   {
     // Logo
-    $this->Image('../../view/img/logo-denta.png', 155, 8, 35);
+    $this->Image('../../view/img/logo-ortho-blanco.png', 155, 8, 35);
     // Arial bold 15
     $this->AddFont('DejaVu','','DejaVuSansCondensed.ttf',true);
     
@@ -22,7 +22,7 @@ class PDFHistoriaClinica extends TFPDF
     $this->Ln(15);
     $this->Cell(80);
     $this->SetFont('Arial', 'B', 15);
-    $this->Cell(30 ,10, utf8_decode('HISTORIA CLINICA ODONTOLÓGICA DENTA VITALIS'), 0, 0, 'C');
+    $this->Cell(30 ,10, utf8_decode('HISTORIA CLINICA ODONTOLÓGICA ORTHO CENTER'), 0, 0, 'C');
 
     
     // Salto de línea

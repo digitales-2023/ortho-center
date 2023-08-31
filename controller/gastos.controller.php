@@ -36,8 +36,8 @@ class ControllerGastos
       $datosCreate = array(
         "NombreGasto" => $_POST["nombreGasto"],
         "IdCentroCostos" => $_POST["centroCosto"],
-        "FechaCreacion" => date("Y-m-d\TH:i:sP"),
-        "FechaActualizacion"=> date("Y-m-d\TH:i:sP"),
+        "FechaCreacion" => date("Y-m-d").' '.date('H:i:s'),
+        "FechaActualizacion"=> date("Y-m-d").' '.date('H:i:s'),
       );
 
       $respuesta = ModelGastos::mdlCrearGasto($tabla, $datosCreate);
@@ -69,7 +69,7 @@ class ControllerGastos
         "IdCentroCostos" =>  $_POST["editarCentroCosto"],
         "NombreGasto" => $_POST["editarNombreGasto"],
         "IdGasto" => $_POST["codGasto"],
-        "FechaActualizacion"=>date("Y-m-d\TH:i:sP"),
+        "FechaActualizacion"=>date("Y-m-d").' '.date('H:i:s'),
       );
 
       $respuesta = ModelGastos::mdlUpdateGasto($tabla, $datosUpdate);

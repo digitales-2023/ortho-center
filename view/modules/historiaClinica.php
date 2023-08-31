@@ -46,14 +46,14 @@
                         <td>'.$value["NombrePaciente"].'</td>
                         <td>'.$value["ApellidoPaciente"].'</td>
                         <td>'.$value["DNIPaciente"].'</td>
-                        <td>'.$value["NombreSocio"].'</td>
+                        <td>'.$value["NombreUsuario"].'</td>
                         <td>'.$value["FechaActualiza"].'</td>
                         <td>
-                          <button class="btn btn-success btnImprimirHistoria" id="btnImprimirHistoria" codHistoria="'.$value["IdHistoriaClinica"].'"><i class="fa fa-print"></i></button>
-                          <button class="btn btn-info btnDescargarOdontograma" id="btnDescargarOdontograma" codHistoria="'.$value["IdHistoriaClinica"].'"><i class="fa fa-cloud-download"></i></button>
-                          <button class="btn btn-warning btnEditarHistoria" id="btnEditarHistoria" codPaciente="'.$value["IdPaciente"].'" codHistoria="'.$value["IdHistoriaClinica"].'"><i class="fa-solid fa-pencil"></i></button>
-                          <button class="btn btn-primary btnListarPlanTratamiento" id="btnListarPlanTratamiento" codPaciente="'.$value["IdPaciente"].'" codHistoria="'.$value["IdHistoriaClinica"].'"><i class="fa fa-list"></i></button>
-                          <button class="btn btn-danger btnEliminarHistoria" codPaciente="'.$value["IdPaciente"].'" codHistoria="'.$value["IdHistoriaClinica"].'"><i class="fa-solid fa-trash"></i></button>
+                          <button title="Imprimir"class="btn btn-success btnImprimirHistoria" id="btnImprimirHistoria" codHistoria="'.$value["IdHistoriaClinica"].'"><i class="fa fa-print"></i></button>
+                          <button title="Descargar"class="btn btn-info btnDescargarOdontograma" id="btnDescargarOdontograma" codHistoria="'.$value["IdHistoriaClinica"].'"><i class="fa fa-cloud-download"></i></button>
+                          <button title="Editar"class="btn btn-warning btnEditarHistoria" id="btnEditarHistoria" codPaciente="'.$value["IdPaciente"].'" codHistoria="'.$value["IdHistoriaClinica"].'"><i class="fa-solid fa-pencil"></i></button>
+                          <button title="Tratamiento"class="btn btn-primary btnListarPlanTratamiento" id="btnListarPlanTratamiento" codPaciente="'.$value["IdPaciente"].'" codHistoria="'.$value["IdHistoriaClinica"].'"><i class="fa fa-list"></i></button>
+                          <button title="Eliminar"class="btn btn-danger btnEliminarHistoria" codPaciente="'.$value["IdPaciente"].'" codHistoria="'.$value["IdHistoriaClinica"].'"><i class="fa-solid fa-trash"></i></button>
                         </td>
                       </tr>';
                     }

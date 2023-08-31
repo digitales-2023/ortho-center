@@ -23,8 +23,8 @@ class ControllerCitas
           "FechaProgramada" => $_POST["fechaProgramacion"],
           "MedicoAsignado" => $_POST["medicoAsignadoCita"],
           "EstadoCita" => "1",
-          "FechaCreacion" => date("Y-m-d\TH:i:sP"),
-          "FechaActualizacion" => date("Y-m-d\TH:i:sP"),
+          "FechaCreacion" => date("Y-m-d").' '.date('H:i:s'),
+          "FechaActualizacion" => date("Y-m-d").' '.date('H:i:s'),
         );
         $respuestaCita = ModelCitas::mdlCrearNuevaCita($tabla, $datosCreate);
   
@@ -95,7 +95,7 @@ class ControllerCitas
           "FechaProgramada" => $_POST["fechaProgramacionEditar"],
           "MedicoAsignado" => $_POST["medicoAsignadoCitaEditar"],
           "EstadoCita" => "1",
-          "FechaActualizacion" => date("Y-m-d\TH:i:sP"),
+          "FechaActualizacion" => date("Y-m-d").' '.date('H:i:s'),
         );
         $respuesta = ModelCitas::mdlEditarCita($tabla, $datosUpdate);
         if($respuesta == "ok")

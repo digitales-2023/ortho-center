@@ -45,8 +45,8 @@ class ControllerSocios
         "IdTipoSocio" => $_POST["tipoSocio"],
         "IdTipoIdentificacion" => $_POST["tipoIdentificacion"],
         "Identificacion" => $_POST["numeroIdentificacion"],
-        "FechaCreacion"=>date("Y-m-d\TH:i:sP"),
-        "FechaActualizacion"=>date("Y-m-d\TH:i:sP"),
+        "FechaCreacion"=>date("Y-m-d").' '.date('H:i:s'),
+        "FechaActualizacion"=>date("Y-m-d").' '.date('H:i:s'),
       );
 
       $respuesta = ModelSocios::mdlCrearSocio($tabla, $datosCreate);
@@ -80,7 +80,7 @@ class ControllerSocios
         "IdTipoSocio" => $_POST["editarTipoSocio"],
         "IdTipoIdentificacion" => $_POST["editarTipoIdentificacion"],
         "Identificacion" => $_POST["editarNumeroIdentificacion"],
-        "FechaActualizacion"=>date("Y-m-d\TH:i:sP"),
+        "FechaActualizacion"=>date("Y-m-d").' '.date('H:i:s'),
       );
 
       $respuesta = ModelSocios::mdlUpdateSocio($tabla, $datosUpdate);

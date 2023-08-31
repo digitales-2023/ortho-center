@@ -18,8 +18,8 @@ class ControllerCostos
       $tabla = "tba_centrocostos";
       $datosCreate = array(
         "DescripcionCentro" => $_POST["nombreCentroCostos"],
-        "FechaCreacion" => date("Y-m-d\TH:i:sP"),
-        "FechaActualizacion" => date("Y-m-d\TH:i:sP")
+        "FechaCreacion" => date("Y-m-d").' '.date('H:i:s'),
+        "FechaActualizacion" => date("Y-m-d").' '.date('H:i:s')
       );
 
       $respuestaCrear = ModelCostos::mdlCrearCentroCostos($tabla, $datosCreate);
@@ -65,7 +65,7 @@ class ControllerCostos
       $datosUpdate = array(
         "IdCentroCostos" => $_POST["codCentroCosto"],
         "DescripcionCentro" => $_POST["editarNombreCentro"],
-        "FechaActualizacion" => date("Y-m-d\TH:i:sP")
+        "FechaActualizacion" => date("Y-m-d").' '.date('H:i:s')
       );
 
       $respuestaUpdate = ModelCostos::mdlEditarCentroCostos($tabla, $datosUpdate);
@@ -159,8 +159,8 @@ class ControllerCostos
         "EstadoCosto" => "1",
         "UsuarioCreado" => $_SESSION["idUsuario"],
         "UsuarioActualiza" => $_SESSION["idUsuario"],
-        "FechaCreacion" => date("Y-m-d\TH:i:sP"),
-        "FechaActualizacion" => date("Y-m-d\TH:i:sP"),
+        "FechaCreacion" => date("Y-m-d").' '.date('H:i:s'),
+        "FechaActualizacion" => date("Y-m-d").' '.date('H:i:s'),
       );
 
       $respuestaCabecera = ModelCostos::mdlIngresarNuevoCosto($tablaCabecera, $datosCabecera);
@@ -299,7 +299,7 @@ class ControllerCostos
           "MesCosto" => $_POST["editarMesGasto"],
           "TotalCosto" => $_POST["nuevoTotalGasto"],
           "UsuarioActualiza" => $_SESSION["idUsuario"],
-          "FechaActualizacion" => date("Y-m-d\TH:i:sP"),
+          "FechaActualizacion" => date("Y-m-d").' '.date('H:i:s'),
         );
 
         $respuestaCabecera = ModelCostos::mdlEditarCabeceraCosto($tablaCabecera, $datosCabecera);
@@ -429,7 +429,7 @@ class ControllerCostos
       $tabla = "tba_costo";
       $datos = array(
         "EstadoCosto" => "2",
-        "FechaActualizacion" => date("Y-m-d\TH:i:sP"),
+        "FechaActualizacion" => date("Y-m-d").' '.date('H:i:s'),
         "IdCosto" => $_GET["codCerrarCosto"],
       );
 

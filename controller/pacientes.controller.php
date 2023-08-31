@@ -31,8 +31,8 @@ class ControllerPacientes
         "CelularPaciente" => $_POST["celularPaciente"],
         "UsuarioCreado"=>$_SESSION["idUsuario"],
         "UsuarioActualiza"=>$_SESSION["idUsuario"],
-        "FechaCreacion"=>date("Y-m-d\TH:i:sP"),
-        "FechaActualizacion"=>date("Y-m-d\TH:i:sP"),
+        "FechaCreacion"=>date("Y-m-d").' '.date('H:i:s'),
+        "FechaActualizacion"=>date("Y-m-d").' '.date('H:i:s'),
       );
 
       $respuesta = ModelPacientes::mdlCrearPaciente($tabla, $datosCreate);
@@ -66,7 +66,7 @@ class ControllerPacientes
         "DNIPaciente" => $_POST["editarDNIPaciente"],
         "CelularPaciente" => $_POST["editarCelularPaciente"],
         "IdPaciente" => $_POST["codPaciente"],
-        "FechaActualizacion"=>date("Y-m-d\TH:i:sP"),
+        "FechaActualizacion"=>date("Y-m-d").' '.date('H:i:s'),
       );
 
       $respuesta = ModelPacientes::mdlUpdatePaciente($tabla, $datosUpdate);
@@ -175,12 +175,34 @@ class ControllerPacientes
     return $datosPaciente;
   }
 
-  //  Buscar paciente por DNI
-  public static function ctrBuscarPacienteDNI($numeroDNI)
+  //  Buscar paciente por DNI para crear una historia
+  public static function ctrBuscarPacienteDNIHistoria($numeroDNI)
   {
     $tabla = "tba_paciente";
     $datosPaciente = ModelPacientes::mdlBuscarPacienteDNI($tabla, $numeroDNI);
     return $datosPaciente;
+  }
+
+  //  Buscar paciente por DNI, obtengo los datos del paciente y el total que se realizo al paciente
+  public static function ctrBuscarPacienteDNIPago($numeroDNI)
+  {
+    $tabla = "tba_paciente";
+    $datosPaciente = ModelPacientes::mdlBuscarPacienteDNI($tabla, $numeroDNI);
+    if($datosPaciente != false || $datosPaciente != '' || $datosPaciente != null)
+    {
+      $codHistoria = ControllerHistorias::ctrObtenerCodHistoria($datosPaciente["IdPaciente"]);
+      //  Lo que pago y cual es su saldo actual
+      $totalRealizado = ControllerTratamiento::ctrObtenerTotalRealizado($codHistoria["IdHistoriaClinica"]);
+      $totalPagado = ControllerTratamiento::ctrObtenerTotalPagado($datosPaciente["IdPaciente"]);
+
+      $saldoActual = $totalRealizado["TotalRealizado"] - $totalPagado["TotalPagado"];
+      $datosPaciente["TotalRealizado"] = $saldoActual;
+      return $datosPaciente;
+    }
+    else
+    {
+      return $datosPaciente;
+    }
   }
 
   //  Mostrar los datos del paciente en visualiar pagos
@@ -229,7 +251,7 @@ class ControllerPacientes
       //  Si nos devuelve valor de 1, significa que el paciente existe por lo cual lo busco para mandarlo junto con la respuesta
       if($nombrePaciente["Contador"] == '1')
       {
-        $codPaciente = self::ctrBuscarPacienteDNI($numeroDNIBuscar);
+        $codPaciente = self::ctrBuscarPacienteDNIHistoria($numeroDNIBuscar);
         $respuesta["codPaciente"] = $codPaciente["IdPaciente"];
         $respuesta["respuesta"] = "ok";
       }

@@ -46,9 +46,9 @@
                       <td>'.$value["DescripcionTipo"].'</td>
                       <td>'.$value["FechaPago"].'</td>
                       <td>
-                        <button class="btn btn-success btnDescargarPago" id="btnDescargarPago" codPago="'.$value["IdPago"].'"><i class="fa-solid fa fa-cloud-download"></i></button>
-                        <button class="btn btn-warning btnEditarPago" id="btnEditarPago" codPago="'.$value["IdPago"].'" data-bs-toggle="modal" data-bs-target="#modalEditarPago"><i class="fa-solid fa-pencil"></i></button>
-                        <button class="btn btn-danger btnEliminarPago" codPago="'.$value["IdPago"].'"><i class="fa-solid fa-trash"></i></button>
+                        <button title="Descargar" class="btn btn-success btnDescargarPago" id="btnDescargarPago" codPago="'.$value["IdPago"].'"><i class="fa-solid fa fa-cloud-download"></i></button>
+                        <button title="Editar" class="btn btn-warning btnEditarPago" id="btnEditarPago" codPago="'.$value["IdPago"].'" data-bs-toggle="modal" data-bs-target="#modalEditarPago"><i class="fa-solid fa-pencil"></i></button>
+                        <button title="Eliminar" class="btn btn-danger btnEliminarPago" codPago="'.$value["IdPago"].'"><i class="fa-solid fa-trash"></i></button>
                       </td>
                     </tr>';
                   }
@@ -85,11 +85,13 @@
             </div>
           </div>
 
-          <!-- Nombre del Paciente-->
+          <!-- Nombre del Paciente y Saldo Actual -->
           <div class="form-group">
-            <label for="nombrePaciente" class="col-form-label">Nombre del Paciente:</label>
+            <label for="nombrePaciente" class="col-form-label" style="font-weight: bold">Nombre del Paciente:</label>
             <input type="hidden" class="codPaciente" name="codPaciente" id="codPaciente">
-            <input type="text" class="form-control" id="nombrePaciente" name="nombrePaciente" readonly>
+            <input type="text" class="form-control border-0" id="nombrePaciente" name="nombrePaciente" readonly>
+            <label for="saldoActual" class="col-form-label" style="font-weight: bold">Saldo Actual:</label>
+            <input type="text" class="form-control border-0" id="saldoActual" name="saldoActual" readonly>
           </div>
 
           <!-- Tipo de pago -->

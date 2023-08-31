@@ -7,7 +7,7 @@ class ModelHistorias
   //  Mostrar todas las historias clinicas
   public static function mdlMostrarAllHistorias($tabla)
   {
-    $statement = Conexion::conn()->prepare("SELECT tba_historiaclinica.IdHistoriaClinica, tba_historiaclinica.IdPaciente, tba_historiaclinica.IdSocio, tba_historiaclinica.FechaActualiza, tba_paciente.NombrePaciente, tba_paciente.ApellidoPaciente, tba_paciente.DNIPaciente, tba_socio.NombreSocio FROM $tabla INNER JOIN tba_paciente ON tba_historiaclinica.IdPaciente = tba_paciente.IdPaciente INNER JOIN tba_socio ON tba_historiaclinica.IdSocio = tba_socio.IdSocio ORDER BY IdHistoriaClinica DESC");
+    $statement = Conexion::conn()->prepare("SELECT tba_historiaclinica.IdHistoriaClinica, tba_historiaclinica.IdPaciente, tba_historiaclinica.IdSocio, tba_historiaclinica.FechaActualiza, tba_paciente.NombrePaciente, tba_paciente.ApellidoPaciente, tba_paciente.DNIPaciente, tba_usuario.NombreUsuario FROM $tabla INNER JOIN tba_paciente ON tba_historiaclinica.IdPaciente = tba_paciente.IdPaciente INNER JOIN tba_usuario ON tba_historiaclinica.IdSocio = tba_usuario.IdUsuario ORDER BY IdHistoriaClinica DESC");
     $statement -> execute();
     return $statement -> fetchAll();
   }

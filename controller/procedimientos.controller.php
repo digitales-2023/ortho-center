@@ -28,8 +28,8 @@ class ControllerProcedimientos
         "NombreProcedimiento" => $_POST["nombreProcedimiento"],
         "IdTipoProcedimiento" => $_POST["tipoProcedimiento"],
         "PrecioPromedio" => $_POST["precioProcedimiento"],
-        "FechaCreacion"=>date("Y-m-d\TH:i:sP"),
-        "FechaActualizacion"=>date("Y-m-d\TH:i:sP"),
+        "FechaCreacion"=>date("Y-m-d").' '.date('H:i:s'),
+        "FechaActualizacion"=>date("Y-m-d").' '.date('H:i:s'),
       );
 
       $respuesta = ModelProcedimientos::mdlCrearProcedimiento($tabla, $datosCreate);
@@ -62,7 +62,7 @@ class ControllerProcedimientos
         "IdTipoProcedimiento" => $_POST["editarTipoProcedimiento"],
         "PrecioPromedio" => $_POST["editarPrecioProcedimiento"],
         "IdProcedimiento" => $_POST["codProcedimiento"],
-        "FechaActualizacion"=>date("Y-m-d\TH:i:sP"),
+        "FechaActualizacion"=>date("Y-m-d").' '.date('H:i:s'),
       );
 
       $respuesta = ModelProcedimientos::mdlUpdateProcedimiento($tabla, $datosUpdate);

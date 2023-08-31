@@ -23,7 +23,7 @@
                   <th>DNI</th>
                   <th>Monto Presupuestado (S/.)</th>
                   <th>Total Realizado (S/.)</th>
-                  <th>Total Pagado (S/.)</th>
+                  <th>Total Cancelado (S/.)</th>
                   <th>Saldo Actual(S/.)</th>
                   <th>Acciones</th>
                 </tr>

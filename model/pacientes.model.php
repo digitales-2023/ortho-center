@@ -210,6 +210,7 @@ class ModelPacientes
     tba_historiaclinica.FuncionesBiologicas, 
     tba_historiaclinica.AntecedentesFamiliares, 
     tba_historiaclinica.AntecedentesPersonales, 
+    tba_historiaclinica.RutaOdontograma, 
     tba_detallehistoriaclinica.PresionArterial, 
     tba_detallehistoriaclinica.Pulso, 
     tba_detallehistoriaclinica.Temperatura, 

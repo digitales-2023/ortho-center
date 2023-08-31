@@ -16,7 +16,7 @@ class PDFHistoriaClinica extends TFPDF
   function Header()
   {
     // Logo
-    $this->Image('../../view/img/logo-denta.png', 155, 8, 35);
+    $this->Image('../../view/img/logo-ortho-blanco.png', 155, 8, 33);
     // Arial bold 15
     $this->AddFont('DejaVu','','DejaVuSansCondensed.ttf',true);
     
@@ -24,7 +24,7 @@ class PDFHistoriaClinica extends TFPDF
     $this->Ln(15);
     $this->Cell(80);
     $this->SetFont('Arial', 'B', 15);
-    $this->Cell(30 ,10, utf8_decode('HISTORIA CLINICA ODONTOLÓGICA DENTA VITALIS'), 0, 0, 'C');
+    $this->Cell(30 ,10, utf8_decode('HISTORIA CLINICA ODONTOLÓGICA ORTHO CENTER'), 0, 0, 'C');
 
     
     // Salto de línea
@@ -339,6 +339,19 @@ $pdf->Cell(10,10,utf8_decode('Nombres y Apellidos del Profesional'),0);
 $pdf->Ln(12);
 $pdf->SetFont('DejaVu', '', 10);
 $pdf->Cell(20,10,'_________________________________________',0);
+
+
+/**
+ * ODONTOGRAMA EN UNA NUEVA HOJA
+ */
+$pdf->AddPage();
+$pdf->SetFont('Arial','B',14);
+$pdf->Cell(80,10,'Odontograma',0,'L');
+
+$pdf->Ln(8);
+$rutaOdontograma = '../../image/odontograma/'.$datosHistoriaClinica["RutaOdontograma"];
+
+$pdf-> Image($rutaOdontograma, 30, 50, 150, 170);
 
 /**
  * PLAN DE TRATAMIENTO DEL PACIENTE EN UNA NUEVA HOJA

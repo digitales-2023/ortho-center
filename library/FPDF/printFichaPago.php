@@ -20,7 +20,7 @@ class PDFHistoriaClinica extends TFPDF
   function Header()
   {
     // Logo
-    $this->Image('../../view/img/logo-denta.png', 155, 8, 35);
+    $this->Image('../../view/img/logo-ortho-blanco.png', 155, 8, 35);
     // Arial bold 15
     $this->AddFont('DejaVu','','DejaVuSansCondensed.ttf',true);
     
@@ -188,18 +188,18 @@ $pdf->Cell(40,8,'Monto Presupuestado:',0);
 $pdf->SetFont('DejaVu', '', 10);
 $pdf->Cell(70,8,'S/. '.number_format($totalesTratamiento["TotalTratamiento"],2),0);
 $pdf->SetFont('Arial','B',10);
-$pdf->Cell(40,8,'Total Realizados:',0);
+$pdf->Cell(40,8,'Total Realizado:',0);
 $pdf->SetFont('DejaVu', '', 10);
 $pdf->Cell(30,8,'S/. '.number_format($totalRealizado["TotalRealizado"],2),0);
 
 $pdf->Ln(5);
 
 $pdf->SetFont('Arial','B',10);
-$pdf->Cell(40,8,'Total Pagado:',0);
+$pdf->Cell(40,8,'Total Cancelado:',0);
 $pdf->SetFont('DejaVu', '', 10);
 $pdf->Cell(70,8,'S/. '.number_format($totalesTratamiento["TotalPagado"],2),0);
 $pdf->SetFont('Arial','B',10);
-$pdf->Cell(40,8,'Total Pagado:',0);
+$pdf->Cell(40,8,'Total Cancelado:',0);
 $pdf->SetFont('DejaVu', '', 10);
 $pdf->Cell(30,8,'S/. '.number_format($totalesTratamiento["TotalPagado"],2),0);
 

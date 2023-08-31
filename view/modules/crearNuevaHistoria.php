@@ -185,7 +185,7 @@
                 <!-- Relato Cronólogico -->
                 <div class="col-md-12">
                   <label for="relatoCronologico" class="form-label" style="font-weight: bold">Relato Cronólogico: </label>
-                  <input type="text" class="form-control" id="relatocronologico" name="relatocronologico">
+                  <input type="text" class="form-control" id="relatoCronologico" name="relatoCronologico">
                 </div>
 
                 <!-- Funciones Biológicas -->

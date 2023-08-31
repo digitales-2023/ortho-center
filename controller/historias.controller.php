@@ -38,7 +38,7 @@ class ControllerHistorias
         "NumeroContactoPaciente" => $_POST["numeroContacto"],
         "NombreContactoPaciente" => $_POST["personaContacto"],
         "UsuarioActualizado" => $_SESSION["idUsuario"],
-        "FechaActualizacion" => date("Y-m-d\TH:i:sP"),
+        "FechaActualizacion" => date("Y-m-d").' '.date('H:i:s'),
       );
       $respuestaPaciente = ControllerPacientes::ctrUpdateDatosPaciente($datosUpdatePaciente);
 
@@ -60,8 +60,8 @@ class ControllerHistorias
           "AntecedentesPersonales" => $_POST["antecedentesPersonales"],
           "UsuarioCreado" => $_SESSION["idUsuario"],
           "UsuarioActualizado" => $_SESSION["idUsuario"],
-          "FechaCreado" => date("Y-m-d\TH:i:sP"),
-          "FechaActualiza" => date("Y-m-d\TH:i:sP"),
+          "FechaCreado" => date("Y-m-d").' '.date('H:i:s'),
+          "FechaActualiza" => date("Y-m-d").' '.date('H:i:s'),
         );
         //  Se ingresa los datos de la cabecera de la historia clínica.
         //  Luego de crear los datos, se genera un plan de tratamiento para el paciente vacío
@@ -75,8 +75,8 @@ class ControllerHistorias
             "IdPaciente" => $_GET["codPaciente"],
             "UsuarioCreado" => $_SESSION["idUsuario"],
             "UsuarioActualiza" => $_SESSION["idUsuario"],
-            "FechaCreacion" => date("Y-m-d\TH:i:sP"),
-            "FechaActualizacion" => date("Y-m-d\TH:i:sP"),
+            "FechaCreacion" => date("Y-m-d").' '.date('H:i:s'),
+            "FechaActualizacion" => date("Y-m-d").' '.date('H:i:s'),
           );
           $respuestaTratamiento = ControllerTratamiento::ctrCrearTratamiento($datosCreateTratamiento);
           if($respuestaTratamiento == "ok")
@@ -99,8 +99,8 @@ class ControllerHistorias
               "InformacionAlta" => $_POST["altaHistoria"],
               "UsuarioCreado" => $_SESSION["idUsuario"],
               "UsuarioActualizado" => $_SESSION["idUsuario"],
-              "FechaCreado" => date("Y-m-d\TH:i:sP"),
-              "FechaActualiza" => date("Y-m-d\TH:i:sP"),
+              "FechaCreado" => date("Y-m-d").' '.date('H:i:s'),
+              "FechaActualiza" => date("Y-m-d").' '.date('H:i:s'),
             );
             $respuestaDetalleHistoria = ModelHistorias::mdlCrearDetalleHistoria($tablaDetalleHistoria, $datosCreateDetalleHistoria);
             //  Ahora puedo jalar los procedimientos que se agregaron al plan de tratamiento y los coloco en el tratamiento que cree previamente.
@@ -267,7 +267,7 @@ class ControllerHistorias
         "NumeroContactoPaciente" => $_POST["editarNumeroContacto"],
         "NombreContactoPaciente" => $_POST["editarPersonaContacto"],
         "UsuarioActualizado" => $_SESSION["idUsuario"],
-        "FechaActualizacion" => date("Y-m-d\TH:i:sP"),
+        "FechaActualizacion" => date("Y-m-d").' '.date('H:i:s'),
       );
       $respuestaPaciente = ControllerPacientes::ctrUpdateDatosPacienteEditar($datosUpdatePaciente);
 
@@ -286,7 +286,7 @@ class ControllerHistorias
           "AntecedentesFamiliares" => $_POST["editarAntecedentesFamiliares"],
           "AntecedentesPersonales" => $_POST["editarAntecedentesPersonales"],
           "UsuarioActualizado" => $_SESSION["idUsuario"],
-          "FechaActualiza" => date("Y-m-d\TH:i:sP"),
+          "FechaActualiza" => date("Y-m-d").' '.date('H:i:s'),
         );
         $respuestaHistoria = ModelHistorias::mdlUpdateHistoriaClinica($tablaHistoria, $datosUpdateHistoria);
 
@@ -307,7 +307,7 @@ class ControllerHistorias
             "TratamientoPaciente" => $_POST["editarTratamiento"],
             "InformacionAlta" => $_POST["editarAltaPaciente"],
             "UsuarioActualizado" => $_SESSION["idUsuario"],
-            "FechaActualiza" => date("Y-m-d\TH:i:sP"),
+            "FechaActualiza" => date("Y-m-d").' '.date('H:i:s'),
           );
           $respuestaDetalleHistoria = ModelHistorias::mdlUpdateDetalleHistoria($tablaDetalleHistoria, $datosUpdateDetalleHistoria);
 

@@ -38,8 +38,11 @@ $(".formularioGenerarPago").on("click", ".btnBuscarPorDNI", function () {
         {
           nombrePaciente = respuesta["NombrePaciente"]+' '+respuesta["ApellidoPaciente"];
           codPaciente = respuesta["IdPaciente"];
+          totalRealizado = respuesta["TotalRealizado"];
+
           $("#nombrePaciente").val(nombrePaciente);
           $("#codPaciente").val(codPaciente);
+          $("#saldoActual").val(totalRealizado);
         }
         else
         {
@@ -66,6 +69,7 @@ $(".formularioGenerarPago").on("click", ".btnBuscarPorDNI", function () {
     });
     $("#nombrePaciente").val('');
     $("#dniPacientePago").val('');
+    $("#saldoActual").val('');
   }
 });
 

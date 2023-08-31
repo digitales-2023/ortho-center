@@ -128,7 +128,7 @@ class ControllerPagos
         "TotalPago" => $_POST["editarMontoPago"],
         "ObservacionPago" => $_POST["editarObservacion"],
         "FechaPago" => $_POST["editarFechaPago"],
-        "FechaActualizacion"=>date("Y-m-d\TH:i:sP"),
+        "FechaActualizacion"=>date("Y-m-d").' '.date('H:i:s'),
         "IdPago" => $_POST["codPagoEdit"],
       );
       ModelPagos::mdlUpdatePago($tabla, $datosUpdate);

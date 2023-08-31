@@ -35,7 +35,7 @@
 </div> 
   
 <!-- Costos  -->
-<div class="sb-sidenav-menu-heading">Costos</div>
+<!-- <div class="sb-sidenav-menu-heading">Costos</div>
   <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#listaCostos" aria-expanded="false" aria-controls="collapseLayouts">
     <div class="sb-nav-link-icon"><i class="fa fa-line-chart"></i></div>
     Costos
@@ -47,7 +47,7 @@
       <a class="nav-link" href="buscarCostos">Filtrar Costos</a>
       <a class="nav-link" href="reporteCostos">Reporte de Costos</a>
     </nav>
-  </div>
+  </div> -->
 
 <!-- Catálogo -->
 <div class="sb-sidenav-menu-heading">Catálogo</div>
@@ -57,7 +57,7 @@
     {
   ?>
   <!-- Catálogo  de Costos -->
-  <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#listaCatalogoCostos" aria-expanded="false" aria-controls="collapseLayouts">
+  <!-- <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#listaCatalogoCostos" aria-expanded="false" aria-controls="collapseLayouts">
     <div class="sb-nav-link-icon"><i class="fas fa-list"></i></div>
     Catálogo Costos
     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
@@ -68,7 +68,7 @@
       <a class="nav-link" href="socios">Catálogo de Socios</a>
       <a class="nav-link" href="gastos">Catálogo de Costos</a>
     </nav>
-  </div>
+  </div> -->
   <?php
   }
   ?>
