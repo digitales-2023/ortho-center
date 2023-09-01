@@ -167,9 +167,9 @@
             <label for="editarDNIPaciente" class="col-form-label">Buscar Por DNI</label>
             <div class="input-group">  
               <div class="input-group-prepend">
-                <button class="btn btn-outline-primary btnBuscarPorDNI" type="button">Buscar</button>
+                <button class="btn btn-outline-primary btnBuscarPorDNI" type="button" disabled>Buscar</button>
               </div>
-                <input type="number" step="1" class="form-control" id="editarDNIPaciente" name="editarDNIPaciente" aria-label="" aria-describedby="basic-addon1" required>
+                <input type="number" step="1" class="form-control" id="editarDNIPaciente" name="editarDNIPaciente" aria-label="" aria-describedby="basic-addon1" readonly>
             </div>
           </div>
 

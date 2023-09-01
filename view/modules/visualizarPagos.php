@@ -190,7 +190,7 @@
 
                 <div class="row p-2" style="font-weight: bold">
                   <div class="col-lg-3">
-                    <span>Total Cancelado #(S/.):</span>
+                    <span>Total Cancelado (S/.):</span>
                   </div>
                   <div class="col-lg-2">
                     <input type="text" style="text-align: right;" class="form-control input-lg border-0" value="<?php echo number_format($totalesTratamiento["TotalPagado"], 2) ?>" readonly>

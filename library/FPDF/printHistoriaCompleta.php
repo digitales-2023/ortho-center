@@ -344,14 +344,18 @@ $pdf->Cell(20,10,'_________________________________________',0);
 /**
  * ODONTOGRAMA EN UNA NUEVA HOJA
  */
-$pdf->AddPage();
-$pdf->SetFont('Arial','B',14);
-$pdf->Cell(80,10,'Odontograma',0,'L');
+if($datosHistoriaClinica["RutaOdontograma"] != null || $datosHistoriaClinica["RutaOdontograma"] != '')
+{
+  $pdf->AddPage();
+  $pdf->SetFont('Arial','B',14);
+  $pdf->Cell(80,10,'Odontograma',0,'L');
 
-$pdf->Ln(8);
-$rutaOdontograma = '../../image/odontograma/'.$datosHistoriaClinica["RutaOdontograma"];
+  $pdf->Ln(8);
+  $rutaOdontograma = '../../image/odontograma/'.$datosHistoriaClinica["RutaOdontograma"];
 
-$pdf-> Image($rutaOdontograma, 30, 50, 150, 170);
+  $pdf-> Image($rutaOdontograma, 30, 50, 150, 170);
+}
+
 
 /**
  * PLAN DE TRATAMIENTO DEL PACIENTE EN UNA NUEVA HOJA
