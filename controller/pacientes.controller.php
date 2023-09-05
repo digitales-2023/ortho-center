@@ -96,8 +96,7 @@ class ControllerPacientes
       $codPaciente = $_GET["codPaciente"];
       $confirmarUsoHistoria = ControllerHistorias::ctrVerificarUsoPaciente($codPaciente);
       $confirmarUsoPago = ControllerPagos::ctrVerificarUsoPaciente($codPaciente);
-      $confirmarUsoCita = ControllerCitas::ctrVerificarUsoPaciente($codPaciente);
-      if(($confirmarUsoHistoria["TotalUso"] > 0) || ($confirmarUsoPago["TotalUso"] > 0) || ($confirmarUsoCita["TotalUso"] > 0))
+      if(($confirmarUsoHistoria["TotalUso"] > 0) || ($confirmarUsoPago["TotalUso"] > 0))
       {
         echo '
           <script>

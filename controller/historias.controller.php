@@ -48,7 +48,7 @@ class ControllerHistorias
         $datosCreateHistoria = array(
           "IdPaciente" => $_GET["codPaciente"],
           //  Solo el doctor creará la historia clínica con su usuario, o puede crearla otra persona???? -> ver si puedo poner ese valor en un campo extra para que pue cambiar de medico o no
-          "IdSocio" => $_SESSION["idUsuario"],
+          "IdUsuario" => $_SESSION["idUsuario"],
           "AlergiasEncontradas" => $_POST["riesgoAlergia"],
           "DatosInformante" => $_POST["datosInformante"],
           "MotivoConsulta" => $_POST["motivoConsulta"],
@@ -569,14 +569,6 @@ class ControllerHistorias
     $tabla = "tba_historiaclinica";
     $sumaHistorias = ModelHistorias::mdlContarHistoriasCreadas($tabla);
     return $sumaHistorias;
-  }
-
-  //  Verificar uso de un socio en una historia clínica
-  public static function ctrVerificarUsoSocio($codSocio)
-  {
-    $tabla = "tba_historiaclinica";
-    $contarUso = ModelHistorias::mdlVerificarUsoSocio($tabla, $codSocio);
-    return $contarUso;
   }
 
   //  Verificar uso de un paciente en una historia clínica

@@ -28,23 +28,14 @@
           $_GET["ruta"] == "home" ||
           $_GET["ruta"] == "usuario" ||
           $_GET["ruta"] == "procedimientos" ||
-          $_GET["ruta"] == "gastos" ||
-          $_GET["ruta"] == "socios" ||
           $_GET["ruta"] == "pacientes" ||
-          $_GET["ruta"] == "allCostos" ||
-          $_GET["ruta"] == "centroCostos" ||
-          $_GET["ruta"] == "crearNuevoCosto" ||
-          $_GET["ruta"] == "editarCosto" ||
-          $_GET["ruta"] == "buscarCostos" ||
-          $_GET["ruta"] == "reporteCostos" ||
           $_GET["ruta"] == "historiaClinica" ||
           $_GET["ruta"] == "crearNuevaHistoria" ||
           $_GET["ruta"] == "editarHistoria" ||
           $_GET["ruta"] == "planTratamiento" ||
           $_GET["ruta"] == "pagosPendientes" ||
           $_GET["ruta"] == "historialPagos" ||
-          $_GET["ruta"] == "visualizarPagos" ||
-          $_GET["ruta"] == "programacionCitas" ||
+          $_GET["ruta"] == "visualizarPagos" ||      
           $_GET["ruta"] == "signout" 
         )
         {
@@ -81,15 +72,11 @@
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
   <script src="js/usuario.js"></script>
-  <script src="js/gastos.js"></script>
-  <script src="js/socios.js"></script>
   <script src="js/pacientes.js"></script>
   <script src="js/procedimientos.js"></script>
-  <script src="js/costos.js"></script>
   <script src="js/historias.js"></script>
   <script src="js/tratamiento.js"></script>
   <script src="js/pagos.js"></script>
-  <script src="js/citas.js"></script>
 
   <script src="assets/chartCostoRango.js"></script>
   <script src="assets/chartCentroCosto.js"></script>

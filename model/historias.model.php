@@ -7,7 +7,7 @@ class ModelHistorias
   //  Mostrar todas las historias clinicas
   public static function mdlMostrarAllHistorias($tabla)
   {
-    $statement = Conexion::conn()->prepare("SELECT tba_historiaclinica.IdHistoriaClinica, tba_historiaclinica.IdPaciente, tba_historiaclinica.IdSocio, tba_historiaclinica.FechaActualiza, tba_paciente.NombrePaciente, tba_paciente.ApellidoPaciente, tba_paciente.DNIPaciente, tba_usuario.NombreUsuario FROM $tabla INNER JOIN tba_paciente ON tba_historiaclinica.IdPaciente = tba_paciente.IdPaciente INNER JOIN tba_usuario ON tba_historiaclinica.IdSocio = tba_usuario.IdUsuario ORDER BY IdHistoriaClinica DESC");
+    $statement = Conexion::conn()->prepare("SELECT tba_historiaclinica.IdHistoriaClinica, tba_historiaclinica.IdPaciente, tba_historiaclinica.IdUsuario, tba_historiaclinica.FechaActualiza, tba_paciente.NombrePaciente, tba_paciente.ApellidoPaciente, tba_paciente.DNIPaciente, tba_usuario.NombreUsuario FROM $tabla INNER JOIN tba_paciente ON tba_historiaclinica.IdPaciente = tba_paciente.IdPaciente INNER JOIN tba_usuario ON tba_historiaclinica.IdUsuario = tba_usuario.IdUsuario ORDER BY IdHistoriaClinica DESC");
     $statement -> execute();
     return $statement -> fetchAll();
   }
@@ -15,9 +15,9 @@ class ModelHistorias
   //  Crear una nueva historia
   public static function mdlCrearHistoriaClinica($tabla, $datosCreateHistoria)
   {
-    $statement = Conexion::conn()->prepare("INSERT INTO $tabla (IdPaciente, IdSocio, AlergiasEncontradas, DatosInformante, MotivoConsulta, TiempoEnfermedad, SignosSintomas, RelatoCronologico, FuncionesBiologicas, AntecedentesFamiliares, AntecedentesPersonales, UsuarioCreado, UsuarioActualizado, FechaCreado, FechaActualiza) VALUES(:IdPaciente, :IdSocio, :AlergiasEncontradas, :DatosInformante, :MotivoConsulta, :TiempoEnfermedad, :SignosSintomas, :RelatoCronologico, :FuncionesBiologicas, :AntecedentesFamiliares, :AntecedentesPersonales, :UsuarioCreado, :UsuarioActualizado, :FechaCreado, :FechaActualiza)");
+    $statement = Conexion::conn()->prepare("INSERT INTO $tabla (IdPaciente, IdUsuario, AlergiasEncontradas, DatosInformante, MotivoConsulta, TiempoEnfermedad, SignosSintomas, RelatoCronologico, FuncionesBiologicas, AntecedentesFamiliares, AntecedentesPersonales, UsuarioCreado, UsuarioActualizado, FechaCreado, FechaActualiza) VALUES(:IdPaciente, :IdUsuario, :AlergiasEncontradas, :DatosInformante, :MotivoConsulta, :TiempoEnfermedad, :SignosSintomas, :RelatoCronologico, :FuncionesBiologicas, :AntecedentesFamiliares, :AntecedentesPersonales, :UsuarioCreado, :UsuarioActualizado, :FechaCreado, :FechaActualiza)");
     $statement -> bindParam(":IdPaciente", $datosCreateHistoria["IdPaciente"], PDO::PARAM_STR);
-    $statement -> bindParam(":IdSocio", $datosCreateHistoria["IdSocio"], PDO::PARAM_STR);
+    $statement -> bindParam(":IdUsuario", $datosCreateHistoria["IdUsuario"], PDO::PARAM_STR);
     $statement -> bindParam(":AlergiasEncontradas", $datosCreateHistoria["AlergiasEncontradas"], PDO::PARAM_STR);
     $statement -> bindParam(":DatosInformante", $datosCreateHistoria["DatosInformante"], PDO::PARAM_STR);
     $statement -> bindParam(":MotivoConsulta", $datosCreateHistoria["MotivoConsulta"], PDO::PARAM_STR);
@@ -208,14 +208,6 @@ class ModelHistorias
   public static function mdlContarHistoriasCreadas($tabla)
   {
     $statement = Conexion::conn()->prepare("SELECT COUNT(IdHistoriaClinica) AS TotalHistorias FROM $tabla");
-    $statement -> execute();
-    return $statement -> fetch();
-  }
-
-  //  Verificar el uso de un socio en una historia clinica
-  public static function mdlVerificarUsoSocio($tabla, $codSocio)
-  {
-    $statement = Conexion::conn()->prepare("SELECT COUNT(IdHistoriaClinica) AS TotalUso FROM $tabla WHERE IdSocio = $codSocio");
     $statement -> execute();
     return $statement -> fetch();
   }
