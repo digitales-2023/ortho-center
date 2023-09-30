@@ -146,7 +146,7 @@ class ControllerPacientes
   public static function ctrUpdateDatosPaciente($datosUpdatePaciente)
   {
     $tabla = "tba_paciente";
-    $respuesta = ModelPacientes::mdlUpdateDatospaciente($tabla, $datosUpdatePaciente);
+    $respuesta = ModelPacientes::mdlUpdateDatosPaciente($tabla, $datosUpdatePaciente);
     return $respuesta;
   }
 
@@ -162,7 +162,7 @@ class ControllerPacientes
   public static function ctrUpdateDatosPacienteEditar($datosUpdatePaciente)
   {
     $tabla = "tba_paciente";
-    $respuesta = ModelPacientes::mdlUpdateDatosPacienteEditar($tabla, $datosUpdatePaciente);
+    $respuesta = ModelPacientes::mdlUpdateDatosPaciente($tabla, $datosUpdatePaciente);
     return $respuesta;
   }
 

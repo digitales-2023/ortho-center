@@ -34,7 +34,6 @@
           $_GET["ruta"] == "editarHistoria" ||
           $_GET["ruta"] == "planTratamiento" ||
           $_GET["ruta"] == "pagosPendientes" ||
-          $_GET["ruta"] == "historialPagos" ||
           $_GET["ruta"] == "visualizarPagos" ||      
           $_GET["ruta"] == "signout" 
         )

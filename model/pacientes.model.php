@@ -86,27 +86,19 @@ class ModelPacientes
   }
   
   //  Update de los datos del paciente en la historia clínica
-  public static function mdlUpdateDatospaciente($tabla, $datosUpdatePaciente)
+  public static function mdlUpdateDatosPaciente($tabla, $datosUpdatePaciente)
   {
-    $statement = Conexion::conn()->prepare("UPDATE $tabla SET DNIPaciente=:DNIPaciente, SexoPaciente=:SexoPaciente, EdadPaciente=:EdadPaciente, FechaNacimiento=:FechaNacimiento, CelularPaciente=:CelularPaciente, DomicilioPaciente=:DomicilioPaciente, LugarProcedencia=:LugarProcedencia, LugarNacimiento=:LugarNacimiento, GradoInstruccion=:GradoInstruccion, RazaPaciente=:RazaPaciente, OcupacionPaciente=:OcupacionPaciente, ReligionPaciente=:ReligionPaciente, EstadoCivil=:EstadoCivil, NumeroContactoPaciente=:NumeroContactoPaciente, NombreContactoPaciente=:NombreContactoPaciente, UsuarioActualiza=:UsuarioActualiza, FechaActualizacion=:FechaActualizacion WHERE IdPaciente=:IdPaciente");
-    $statement -> bindParam(":EdadPaciente", $datosUpdatePaciente["EdadPaciente"], PDO::PARAM_STR);
+    $statement = Conexion::conn()->prepare("UPDATE $tabla SET SexoPaciente=:SexoPaciente, EdadPaciente=:EdadPaciente, OcupacionPaciente=:OcupacionPaciente, LugarProcedencia=:LugarProcedencia, DomicilioPaciente=:DomicilioPaciente, CelularPaciente=:CelularPaciente, UsuarioActualiza=:UsuarioActualiza, FechaActualizacion=:FechaActualizacion WHERE IdPaciente=:IdPaciente");
+
+    $statement -> bindParam(":IdPaciente", $datosUpdatePaciente["IdPaciente"], PDO::PARAM_STR);
     $statement -> bindParam(":SexoPaciente", $datosUpdatePaciente["SexoPaciente"], PDO::PARAM_STR);
-    $statement -> bindParam(":DNIPaciente", $datosUpdatePaciente["DNIPaciente"], PDO::PARAM_STR);
-    $statement -> bindParam(":FechaNacimiento", $datosUpdatePaciente["FechaNacimiento"], PDO::PARAM_STR);
-    $statement -> bindParam(":CelularPaciente", $datosUpdatePaciente["CelularPaciente"], PDO::PARAM_STR);
-    $statement -> bindParam(":DomicilioPaciente", $datosUpdatePaciente["DomicilioPaciente"], PDO::PARAM_STR);
-    $statement -> bindParam(":LugarProcedencia", $datosUpdatePaciente["LugarProcedencia"], PDO::PARAM_STR);
-    $statement -> bindParam(":LugarNacimiento", $datosUpdatePaciente["LugarNacimiento"], PDO::PARAM_STR);
-    $statement -> bindParam(":GradoInstruccion", $datosUpdatePaciente["GradoInstruccion"], PDO::PARAM_STR);
-    $statement -> bindParam(":RazaPaciente", $datosUpdatePaciente["RazaPaciente"], PDO::PARAM_STR);
+    $statement -> bindParam(":EdadPaciente", $datosUpdatePaciente["EdadPaciente"], PDO::PARAM_STR);
     $statement -> bindParam(":OcupacionPaciente", $datosUpdatePaciente["OcupacionPaciente"], PDO::PARAM_STR);
-    $statement -> bindParam(":ReligionPaciente", $datosUpdatePaciente["ReligionPaciente"], PDO::PARAM_STR);
-    $statement -> bindParam(":EstadoCivil", $datosUpdatePaciente["EstadoCivil"], PDO::PARAM_STR);
-    $statement -> bindParam(":NumeroContactoPaciente", $datosUpdatePaciente["NumeroContactoPaciente"], PDO::PARAM_STR);
-    $statement -> bindParam(":NombreContactoPaciente", $datosUpdatePaciente["NombreContactoPaciente"], PDO::PARAM_STR);
+    $statement -> bindParam(":LugarProcedencia", $datosUpdatePaciente["LugarProcedencia"], PDO::PARAM_STR);
+    $statement -> bindParam(":DomicilioPaciente", $datosUpdatePaciente["DomicilioPaciente"], PDO::PARAM_STR);
+    $statement -> bindParam(":CelularPaciente", $datosUpdatePaciente["CelularPaciente"], PDO::PARAM_STR);
     $statement -> bindParam(":UsuarioActualiza", $datosUpdatePaciente["UsuarioActualiza"], PDO::PARAM_STR);
     $statement -> bindParam(":FechaActualizacion", $datosUpdatePaciente["FechaActualizacion"], PDO::PARAM_STR);
-    $statement -> bindParam(":IdPaciente", $datosUpdatePaciente["IdPaciente"], PDO::PARAM_STR);
     if($statement -> execute())
     {
       return "ok";
@@ -120,7 +112,7 @@ class ModelPacientes
   //  Mostrar los datos del paciente para la historia clínica
   public static function mdlMostrarDatosHistoria($tabla, $codPaciente)
   {
-    $statement = Conexion::conn()->prepare("SELECT tba_paciente.IdPaciente, tba_paciente.NombrePaciente, tba_paciente.ApellidoPaciente, tba_paciente.DNIPaciente, tba_paciente.SexoPaciente, tba_paciente.EdadPaciente, tba_paciente.FechaNacimiento, tba_paciente.CelularPaciente, tba_paciente.DomicilioPaciente, tba_paciente.LugarProcedencia, tba_paciente.LugarNacimiento, tba_paciente.GradoInstruccion, tba_paciente.RazaPaciente, tba_paciente.OcupacionPaciente, tba_paciente.ReligionPaciente, tba_paciente.EstadoCivil, tba_paciente.NumeroContactoPaciente, tba_paciente.NombreContactoPaciente FROM $tabla WHERE tba_paciente.IdPaciente = $codPaciente");
+    $statement = Conexion::conn()->prepare("SELECT tba_paciente.IdPaciente, tba_paciente.NombrePaciente, tba_paciente.ApellidoPaciente, tba_paciente.DNIPaciente, tba_paciente.SexoPaciente, tba_paciente.EdadPaciente, tba_paciente.CelularPaciente, tba_paciente.DomicilioPaciente, tba_paciente.LugarProcedencia, tba_paciente.OcupacionPaciente FROM $tabla WHERE tba_paciente.IdPaciente = $codPaciente");
     $statement -> execute();
     return $statement -> fetch();
   }
@@ -128,7 +120,7 @@ class ModelPacientes
   //  Modificar los datos del paciente al editar la historia clínica
   public static function mdlUpdateDatosPacienteEditar($tabla, $datosUpdatePaciente)
   {
-    $statement = Conexion::conn()->prepare("UPDATE $tabla SET SexoPaciente=:SexoPaciente, EdadPaciente=:EdadPaciente, FechaNacimiento=:FechaNacimiento, CelularPaciente=:CelularPaciente, DomicilioPaciente=:DomicilioPaciente, LugarProcedencia=:LugarProcedencia, LugarNacimiento=:LugarNacimiento, GradoInstruccion=:GradoInstruccion, RazaPaciente=:RazaPaciente, OcupacionPaciente=:OcupacionPaciente, ReligionPaciente=:ReligionPaciente, EstadoCivil=:EstadoCivil, NumeroContactoPaciente=:NumeroContactoPaciente, NombreContactoPaciente=:NombreContactoPaciente, UsuarioActualiza=:UsuarioActualiza, FechaActualizacion=:FechaActualizacion WHERE IdPaciente=:IdPaciente");
+    $statement = Conexion::conn()->prepare("UPDATE $tabla SET SexoPaciente=:SexoPaciente, EdadPaciente=:EdadPaciente, CelularPaciente=:CelularPaciente, OcupacionPaciente=:OcupacionPaciente, LugarProcedencia=:LugarProcedencia, DomicilioPaciente=:DomicilioPaciente, UsuarioActualiza=:UsuarioActualiza, FechaActualizacion=:FechaActualizacion WHERE IdPaciente=:IdPaciente");
     $statement -> bindParam(":EdadPaciente", $datosUpdatePaciente["EdadPaciente"], PDO::PARAM_STR);
     $statement -> bindParam(":SexoPaciente", $datosUpdatePaciente["SexoPaciente"], PDO::PARAM_STR);
     $statement -> bindParam(":FechaNacimiento", $datosUpdatePaciente["FechaNacimiento"], PDO::PARAM_STR);
@@ -159,7 +151,7 @@ class ModelPacientes
   //  Mostrar los datos del paciente al ver el plan de tratamiento
   public static function mdlMostrarDatosTratamiento($tabla, $codPaciente)
   {
-    $statement = Conexion::conn()->prepare("SELECT tba_paciente.IdPaciente, tba_paciente.NombrePaciente, tba_paciente.ApellidoPaciente, tba_paciente.DNIPaciente, tba_paciente.EdadPaciente, tba_paciente.CelularPaciente, tba_paciente.NumeroContactoPaciente, tba_paciente.NombreContactoPaciente FROM $tabla WHERE tba_paciente.IdPaciente = $codPaciente");
+    $statement = Conexion::conn()->prepare("SELECT tba_paciente.IdPaciente, tba_paciente.NombrePaciente, tba_paciente.ApellidoPaciente, tba_paciente.DNIPaciente, tba_paciente.EdadPaciente, tba_paciente.CelularPaciente FROM $tabla WHERE tba_paciente.IdPaciente = $codPaciente");
     $statement -> execute();
     return $statement -> fetch();
   }

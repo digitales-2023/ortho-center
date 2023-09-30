@@ -29,8 +29,7 @@
   </a>
   <div class="collapse" id="listaPagos" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
     <nav class="sb-sidenav-menu-nested nav">
-      <a class="nav-link" href="historialPagos">Todos los pagos</a>
-      <a class="nav-link" href="pagosPendientes">Pagos pendientes</a>
+      <a class="nav-link" href="pagosPendientes">Todos los Pagos</a>
     </nav>    
 </div> 
 

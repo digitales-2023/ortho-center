@@ -90,7 +90,7 @@ class ModelPagos
     tba_paciente.IdPaciente, 
     tba_paciente.NombrePaciente, 
     tba_paciente.ApellidoPaciente, 
-	  tba_paciente.DNIPaciente, 
+	  tba_paciente.DNIPaciente,
     tba_tratamiento.IdHistoriaClinica, 
     tba_tratamiento.TotalTratamiento, 
     tba_tratamiento.TotalPagado

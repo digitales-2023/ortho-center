@@ -9,7 +9,7 @@
     <div id="layoutSidenav_content">
       <main class="bg">
         <div class="container-fluid px-4">
-          <h1 class="mt-4">Todos los Pagos Pendientes</h1>
+          <h1 class="mt-4">Todos los Pagos</h1>
           <div class="d-inline-flex m-2">
 
           </div>
@@ -19,11 +19,11 @@
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>Paciente</th>
+                  <th>Nombres</th>
+                  <th>Apellidos</th>
                   <th>DNI</th>
-                  <th>Monto Presupuestado (S/.)</th>
-                  <th>Total Realizado (S/.)</th>
-                  <th>Total Cancelado (S/.)</th>
+                  <th>Total Realizado(S/.)</th>
+                  <th>Total Cancelado(S/.)</th>
                   <th>Saldo Actual(S/.)</th>
                   <th>Acciones</th>
                 </tr>
@@ -39,9 +39,9 @@
                     echo
                       '<tr>
                         <td>'.($key + 1).'</td>
-                        <td>'.$value["NombrePaciente"].' '.$value["ApellidoPaciente"].'</td>
+                        <td>'.$value["NombrePaciente"].'</td>
+                        <td>'.$value["ApellidoPaciente"].'</td>
                         <td>'.$value["DNIPaciente"].'</td>
-                        <td>'.number_format($value["TotalTratamiento"],2).'</td>
                         <td>'.number_format($totalRealizado["TotalRealizado"],2).'</td>
                         <td>'.number_format($totalesTratamiento["TotalPagado"],2).'</td>
                         <td>'.$deudaRealizados.'</td>
