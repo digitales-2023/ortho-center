@@ -79,6 +79,7 @@ class ControllerHistorias
             "FechaActualizacion" => date("Y-m-d").' '.date('H:i:s'),
           );
           $respuestaTratamiento = ControllerTratamiento::ctrCrearTratamiento($datosCreateTratamiento);
+          ControllerPagos::ctrCrearListaPagos($_GET["codPaciente"], $ultimaHistoria["Id"]);
           if($respuestaTratamiento == "ok")
           {
             echo '

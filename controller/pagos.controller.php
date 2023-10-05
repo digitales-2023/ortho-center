@@ -286,4 +286,33 @@ class ControllerPagos
     $contarUso = ModelPagos::mdlVerificarUsoPaciente($tabla, $codPaciente);
     return $contarUso;
   }
+
+  // Mostrar la lista de pacientes con los pagos en cada uno
+  public static function ctrMostrarListaPacientesTratamiento()
+  {
+    $tabla = "tba_pago";
+    $listaTratamientoPagos = ModelPagos::mdlMostrarListaPacientesTratamiento($tabla);
+    return $listaTratamientoPagos;
+  }
+
+  //  Crear nueva lista de pagos vacía al crear la historia
+  public static function ctrCrearListaPagos($codPaciente, $codHistoriaClinica)
+  {
+    $tabla = "tba_pago";
+    $datosCreate = array(
+      "IdPaciente" => $codPaciente,
+      "IdHistoriaClinica" => $codHistoriaClinica,
+      "FechaCreacion" => date("Y-m-d").' '.date('H:i:s'),
+      "FechaActualizacion" =>date("Y-m-d").' '.date('H:i:s'),
+    );
+    $respuesta = ModelPagos::mdlCrearListaPagos($tabla, $datosCreate);
+    return $respuesta;
+  }
+
+  //  Guardar pagos
+  public static function ctrGuardarPagos(){
+    if(isset($_POST[""])){
+      
+    }
+  }
 }
