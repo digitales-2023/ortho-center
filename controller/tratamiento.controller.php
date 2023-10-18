@@ -9,15 +9,7 @@ class ControllerTratamiento
     $respuesta = ModelTratamiento::mdlCrearTratamiento($tabla, $datosCreateTratamiento);
     return $respuesta;
   }
-
-  //  Obtener el último tratamiento creado
-  public static function ctrObtenerUltimoTratamiento()
-  {
-    $tabla = "tba_tratamiento";
-    $respuesta = ModelTratamiento::mdlObtenerUltimoTratamiento($tabla);
-    return $respuesta;
-  }
-
+  
   //  Obtener el tratamiento de un paciente en específico
   public static function ctrObtenerIdTratamiento($codPaciente)
   {
@@ -26,35 +18,11 @@ class ControllerTratamiento
     return $respuesta;
   }
 
-  //  Crear el detalle del tratamiento
-  public static function ctrCrearDetalleTratamiento($datosDetalleTratamiento)
-  {
-    $tabla = "tba_detalletratamiento";
-    $respuesta = ModelTratamiento::mdlCrearDetalleTratamiento($tabla, $datosDetalleTratamiento);
-    return $respuesta;
-  }
-
   //  Update del precio del tratamiento segun el los procedimientos
   public static function ctrUpdatePrecioTratamiento($codTratamiento, $totalTratamiento)
   {
     $tabla = "tba_tratamiento";
-    $respuesta = ModelTratamiento::mdlUpadatePrecioTratamiento($tabla, $codTratamiento, $totalTratamiento);
-    return $respuesta;
-  }
-
-  //  Mostrar el total del tratamiento actual por el codigo de tratamiento
-  public static function ctrMostrarTotalTratamiento($codTratamiento)
-  {
-    $tabla = "tba_tratamiento";
-    $respuesta = ModelTratamiento::mdlMostrarTotalTratamiento($tabla, $codTratamiento);
-    return $respuesta;
-  }
-  
-  //  Mostrar la lista de procedimientos de una historia
-  public static function ctrMostrarDetalleTratamiento($codHistoria)
-  {
-    $tabla = "tba_detalletratamiento";
-    $respuesta = ModelTratamiento::mdlMostrarDetalleTratamiento($tabla, $codHistoria);
+    $respuesta = ModelTratamiento::mdlUpdatePrecioTratamiento($tabla, $codTratamiento, $totalTratamiento);
     return $respuesta;
   }
 
@@ -79,14 +47,6 @@ class ControllerTratamiento
   {
     $tabla = "tba_detalletratamiento";
     $respuesta = ModelTratamiento::mdlMostrarDetalleTratamientoEstado($tabla, $codHistoria, 1);
-    return $respuesta;
-  }
-  
-  //  Obtener el codigo del tratamiento
-  public static function ctrObtenerCodigoTratamiento($codPaciente)
-  {
-    $tabla = "tba_tratamiento";
-    $respuesta = ModelTratamiento::mdlObtenerCodTratamiento($tabla, $codPaciente);
     return $respuesta;
   }
 
@@ -247,31 +207,26 @@ class ControllerTratamiento
     $respuesta = ModelTratamiento::mdlObtenerTotalRealizado($tabla, $codHistoria);
     return $respuesta;
   }
-
-  //  Eliminar todo el tratamiento
-  public static function ctrEliminarTratamiento($codTratamiento)
-  {
-    $tablaTratamiento = "tba_tratamiento";
-    $tablaDetalleTratamiento = "tba_detalletratamiento";
-
-    //  Primero le pasamos la tabla de detalle de tratamiento y luego la tabla de tratamiento para eliminar los registros que tengan el codigo de tratamiento en ambas tablas
-    $confirmarDetalle = ModelTratamiento::mdlEliminarTratamiento($tablaDetalleTratamiento, $codTratamiento);
-    if($confirmarDetalle == "ok")
-    {
-      $respuesta = ModelTratamiento::mdlEliminarTratamiento($tablaTratamiento, $codTratamiento);
-    }
-    else
-    {
-      $respuesta = "errorDetalle";
-    }
-    return $respuesta;
-  }
-
+  
   //  Verificar uso de tratamiento
   public static function ctrVerificarUsoProcedimiento($codProcedimiento)
   {
     $tabla = "tba_detalletratamiento";
     $contarProcedimiento = ModelTratamiento::mdlVerificarUsoProcedimiento($tabla, $codProcedimiento);
     return $contarProcedimiento;
+  }
+
+  //  Mostrar los procedimientos de una historia en específico
+  public static function ctrListarProcedimientosPaciente($codPaciente){
+    $tabla = "tba_tratamiento";
+    $listarProcedimientos = ModelTratamiento::mdlListarProcedimientosPaciente($tabla, $codPaciente);
+    return $listarProcedimientos;
+  }
+
+  //  Mostrar el costo del tratamiento
+  public static function ctrMostrarCostoDetalle($codDetalleTratamiento){
+    $tabla = "tba_detalletratamiento";
+    $precioTratamiento = ModelTratamiento::mdlMostrarCostoDetalle($tabla, $codDetalleTratamiento);
+    return $precioTratamiento;
   }
 }

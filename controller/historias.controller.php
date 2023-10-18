@@ -145,16 +145,6 @@ class ControllerHistorias
     return $respuesta;
   }
 
-
-
-  //  Mostrar los datos del detalle de la historia
-  public static function ctrMostrarDetalleHistoria($codHistoria)
-  {
-    $tabla = "tba_detallehistoriaclinica";
-    $respuesta = ModelHistorias::mdlMostrarDetalleHistoria($tabla, $codHistoria);
-    return $respuesta;
-  }
-
   //  Editar Historia clínica
   public static function ctrEditarHistoria()
   {
@@ -300,14 +290,6 @@ class ControllerHistorias
         </script>';
       }
     }
-  }
-
-  //  Eliminar el detalle de la historia clínica
-  public static function ctrEliminarDetalleHistoria($codHistoria)
-  {
-    $tabla = "tba_detallehistoriaclinica";
-    $respuesta = ModelHistorias::mdlEliminarHistoria($tabla, $codHistoria);
-    return $respuesta;
   }
 
   //  Buscar Historia por codigo de paciente

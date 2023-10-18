@@ -11,13 +11,13 @@
     <div class="container-fluid px-4">
       <h2 class="mt-4">
         <?php
-        if (isset($_GET["codPaciente"]) && isset($_GET["codHistoria"])) {
+        if (isset($_GET["codPaciente"])) {
           $codPaciente = $_GET["codPaciente"];
-          $codHistoria = $_GET["codHistoria"];
+          $codHistoria = ControllerHistorias::ctrObtenerCodHistoria($codPaciente);
           $datosPaciente = ControllerPacientes::ctrMostrarDatosBasicos($codPaciente);
-          $detalleTratamiento = ControllerTratamiento::ctrMostrarDetalleTratamientoCompleto($codHistoria);
+
           $totalesTratamiento = ControllerTratamiento::ctrObtenerTotalesTratamiento($codPaciente);
-          $totalRealizado = ControllerTratamiento::ctrObtenerTotalRealizado($codHistoria);
+          $totalRealizado = ControllerTratamiento::ctrObtenerTotalRealizado($codHistoria["IdHistoriaClinica"]);
           echo ' Pagos Pendientes Paciente: ' . $datosPaciente["NombrePaciente"] . ' ' . $datosPaciente["ApellidoPaciente"];
         } else {
           echo 'No hay datos de los Pagos Pendientes';
@@ -52,19 +52,23 @@
           <span class="border border-3 p-3">
             <div class="container row g-3">
               <h3>Plan de Tratamiento</h3>
-
               <div class="row" style="font-weight: bold">
                 <div class="col-lg-3">Descripción</div>
+                <div class="col-lg-3">Observacion</div>
                 <div class="col-lg-2">Fecha Intervencion</div>
-                <div class="col-lg-1">Estado</div>
+                <div class="col-lg-2">Estado</div>
                 <div class="col-lg-2">Precio(S/.)</div>
-                <div class="col-lg-2">A Cuenta(S/.)</div>
-                <div class="col-lg-2">Saldo(S/.)</div>
               </div>
 
-              <div class="form-group row nuevoProcedimientoAgregar">
+              <div class="form-group row">
                 <?php
+                $detalleTratamiento = ControllerTratamiento::ctrMostrarDetalleTratamientoCompleto($codHistoria["IdHistoriaClinica"]);
                 foreach ($detalleTratamiento as $value) {
+                  if ($value["EstadoTratamiento"] == "1") {
+                    $estado = "No Realizado";
+                  } else {
+                    $estado = "Realizado";
+                  }
                   echo '
                         <div class="row" style="padding:5px 15px">
 
@@ -72,37 +76,83 @@
                           <div class="col-lg-3">
                             <div class="input-group">
                               <input type="text" class="form-control" value="' . $value["NombreProcedimiento"] . '" readonly>
-                              <input type="hidden" class="form-control editarProcedimiento" codProcedimiento="' . $value["IdProcedimiento"] . '">
                             </div>
                           </div>
 
+                          <!-- Observacion del tratamiento -->
+                          <div class="col-lg-3">
+                            <input type="text" class="form-control" value="' . $value["ObservacionProcedimiento"] . '" readonly>
+                          </div>
+
                           <!-- Fecha del Procedimiento -->
-                          <div class="col-lg-2 fechaProcedimiento">
+                          <div class="col-lg-2">
                             <input type="date" class="form-control" value="' . $value["FechaProcedimiento"] . '" readonly>
                           </div>
                   
                           <!-- Precio del procedimiento -->
-                          <div class="col-lg-1 precioProcedimiento">
-                            <input type="number" class="form-control" value="' . $value["EstadoTratamiento"] . '" readonly>
+                          <div class="col-lg-2">
+                            <input type="text" class="form-control" value="' . $estado . '" readonly>
                           </div>
 
                           <!-- Precio del procedimiento -->
-                          <div class="col-lg-2 precioProcedimiento">
+                          <div class="col-lg-2">
                             <input type="number" class="form-control" value="' . $value["PrecioProcedimiento"] . '" readonly>
-                          </div>
-
-                          <!-- A cuenta del procedimiento -->
-                          <div class="col-lg-2 aCuentaProcedimiento">
-                            <input type="number" class="form-control" name="aCuentaProcedimiento" id="aCuentaProcedimiento">
-                          </div>
-
-                          <!-- Saldo del procedimiento -->
-                          <div class="col-lg-2 saldoProcedimiento">
-                            <input type="number" class="form-control" name="saldoProcedimiento" id="saldoProcedimiento">
                           </div>
 
                         </div>
                       ';
+                }
+                ?>
+              </div>
+            </div>
+          </span>
+
+          <span class="border border-3 p-3">
+            <div class="container row g-3">
+              <h3>Todos los pagos</h3>
+              <div class="row" style="font-weight: bold">
+                <div class="col-lg-3">Trat. Asociado</div>
+                <div class="col-lg-4">Observacion</div>
+                <div class="col-lg-2">Fecha Pago</div>
+                <div class="col-lg-2">Total Cancelado(S/.)</div>
+              </div>
+
+              <div class="form-group row nuevoPagoAgregar">
+                <?php
+                $listaPagos = ControllerPagos::ctrMostrarPagosPorPaciente($codPaciente);
+                foreach ($listaPagos as $value) {
+                  if ($value["IdDetalleTratamiento"] != "0" || $value["IdDetalleTratamiento"] != "") {
+                    $procedimiento = "Sin procedimiento asociado";
+                  } else {
+                    $procedimiento = $value["NombreProcedimiento"];
+                  }
+                  echo '
+                          <div class="row" style="padding:5px 15px">
+  
+                            <!-- Descripción del procedimiento -->
+                            <div class="col-lg-3">
+                              <div class="input-group">
+                                <input type="text" class="form-control" value="' . $procedimiento . '" readonly>
+                              </div>
+                            </div>
+  
+                            <!-- Observación del pago -->
+                            <div class="col-lg-4">
+                              <input type="text" class="form-control" value="' . $value["ObservacionPago"] . '" readonly>
+                            </div>
+  
+                            <!-- Fecha del Pago -->
+                            <div class="col-lg-2">
+                              <input type="date" class="form-control" value="' . $value["FechaPago"] . '" readonly>
+                            </div>
+                    
+                            <!-- Total Cancelado -->
+                            <div class="col-lg-2">
+                              <input type="text" class="form-control" value="' . $value["TotalPagado"] . '" readonly>
+                            </div>
+  
+                          </div>
+                        ';
                 }
                 ?>
               </div>
@@ -151,15 +201,10 @@
 
               <div class="container row g-3 p-3 justify-content-between">
                 <button type="button" class="col-1 d-inline-flex-center p-2 btn btn-secondary cerrarVisualizar">Cerrar</button>
-                <button type="submit" class="col-1 d-inline-flex-center p-2 btn btn-primary registrarPago">Guardar</button>
               </div>
             </div>
           </span>
         </div>
-        <?php
-        $guardarPagos = new ControllerPagos;
-        $guardarPagos->ctrGuardarPagos();
-        ?>
       </form>
     </div>
 </div>

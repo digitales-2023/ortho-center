@@ -45,14 +45,6 @@ class ModelTratamiento
     }
   }
 
-  //  Obtener el ultimo tratamiento
-  public static function mdlObtenerUltimoTratamiento($tabla)
-  {
-    $statement = Conexion::conn()->prepare("SELECT MAX(IdTratamiento) as Id FROM $tabla");
-    $statement -> execute();
-    return $statement -> fetch();
-  }
-
   //  Obtener el tratamiento de un paciente
   public static function mdlObtenerIdTratamiento($tabla, $codPaciente)
   {
@@ -61,28 +53,8 @@ class ModelTratamiento
     return $statement -> fetch();
   }
 
-  //  Crear el detalle del tratamiento
-  public static function mdlCrearDetalleTratamiento($tabla, $datosDetalleTratamiento)
-  {
-    $statement = Conexion::conn()->prepare("INSERT INTO $tabla (IdTratamiento, IdProcedimiento, EstadoTratamiento, ObservacionProcedimiento, PrecioProcedimiento) VALUES(:IdTratamiento, :IdProcedimiento, :EstadoTratamiento, :ObservacionProcedimiento, :PrecioProcedimiento)");
-    $statement -> bindParam(":IdTratamiento", $datosDetalleTratamiento["IdTratamiento"], PDO::PARAM_STR);
-    $statement -> bindParam(":IdProcedimiento", $datosDetalleTratamiento["IdProcedimiento"], PDO::PARAM_STR);
-    $statement -> bindParam(":EstadoTratamiento", $datosDetalleTratamiento["EstadoTratamiento"], PDO::PARAM_STR);
-    $statement -> bindParam(":ObservacionProcedimiento", $datosDetalleTratamiento["ObservacionProcedimiento"], PDO::PARAM_STR);
-    $statement -> bindParam(":PrecioProcedimiento", $datosDetalleTratamiento["PrecioProcedimiento"], PDO::PARAM_STR);
-
-    if($statement -> execute())
-    {
-      return "ok";
-    }
-    else
-    {
-      return "error";
-    }
-  }
-
   //  Actualizar el total del tratamiento
-  public static function mdlUpadatePrecioTratamiento($tabla, $codTratamiento, $totalTratamiento)
+  public static function mdlUpdatePrecioTratamiento($tabla, $codTratamiento, $totalTratamiento)
   {
     $statement = Conexion::conn()->prepare("UPDATE $tabla SET TotalTratamiento=:TotalTratamiento WHERE IdTratamiento=:IdTratamiento");
     $statement -> bindParam(":TotalTratamiento", $totalTratamiento, PDO::PARAM_STR);
@@ -95,42 +67,6 @@ class ModelTratamiento
     {
       return "error";
     }
-  }
-
-  //  Mostrar el total del tratamiento
-  public static function mdlMostrarTotalTratamiento($tabla, $codTratamiento)
-  {
-    $statement = Conexion::conn()->prepare("SELECT tba_tratamiento.TotalTratamiento FROM $tabla WHERE tba_tratamiento.IdTratamiento = $codTratamiento");
-    $statement -> execute();
-    return $statement -> fetch();
-  }
-
-  //  mostrar detalle del tratamiento por la historia clinica
-  public static function mdlMostrarDetalleTratamiento($tabla, $codHistoria)
-  {
-    $statement = Conexion::conn()->prepare("SELECT
-    tba_procedimiento.NombreProcedimiento, 
-    tba_detalletratamiento.PrecioProcedimiento, 
-    tba_detalletratamiento.ObservacionProcedimiento, 
-    tba_procedimiento.IdProcedimiento
-  FROM
-    $tabla
-    INNER JOIN
-    tba_tratamiento
-    ON 
-      tba_detalletratamiento.IdTratamiento = tba_tratamiento.IdTratamiento
-    INNER JOIN
-    tba_historiaclinica
-    ON 
-      tba_tratamiento.IdHistoriaClinica = tba_historiaclinica.IdHistoriaClinica
-    INNER JOIN
-    tba_procedimiento
-    ON 
-      tba_detalletratamiento.IdProcedimiento = tba_procedimiento.IdProcedimiento
-  WHERE
-    tba_historiaclinica.IdHistoriaClinica = $codHistoria");
-    $statement -> execute();
-    return $statement -> fetchAll();
   }
 
   //  Mostrar el detalle del tratamiento en su totalidad
@@ -193,22 +129,6 @@ class ModelTratamiento
     return $statement -> fetchAll();
   }
 
-  //  Obtener el codigo del tratamiento
-  public static function mdlObtenerCodTratamiento($tabla, $codPaciente)
-  {
-    $statement = Conexion::conn()->prepare("SELECT tba_tratamiento.IdTratamiento FROM $tabla WHERE tba_tratamiento.IdPaciente = $codPaciente");
-    $statement -> execute();
-    return $statement -> fetch();
-  }
-
-  //  Obtener la lista de procedimientos de un tratamiento por el codigo de paciente ---> USAR PARA LISTADO DE PAGOS POR PACIENTE
-  public static function mdlObtenerListaProcedimientos($tabla, $codPaciente)
-  {
-    $statement = Conexion::conn()->prepare("SELECT tba_detalletratamiento.IdDetalleTratamiento, tba_detalletratamiento.IdProcedimiento, tba_detalletratamiento.ObservacionProcedimiento, tba_detalletratamiento.EstadoTratamiento, tba_detalletratamiento.FechaProcedimiento, tba_detalletratamiento.PrecioProcedimiento, tba_detalletratamiento.IdTratamiento FROM $tabla	INNER JOIN tba_tratamiento ON tba_detalletratamiento.IdTratamiento = tba_tratamiento.IdTratamiento WHERE	tba_tratamiento.IdPaciente = $codPaciente ORDER BY IdDetalleTratamiento ASC");
-    $statement -> execute();
-    return $statement -> fetchAll();
-  }
-
   //  Eliminar detalle de tratamiento del paciente
   public static function mdlEliminarDetalleActual($tabla, $codTratamiento)
   {
@@ -263,24 +183,45 @@ class ModelTratamiento
     return $statement -> fetch();
   }
 
-  //  Eliminar detalle de tratamiento
-  public static function mdlEliminarTratamiento($tabla, $codTratamiento)
-  {
-    $statement = Conexion::conn()->prepare("DELETE FROM $tabla WHERE IdTratamiento = $codTratamiento");
-    if($statement -> execute())
-    {
-      return "ok";
-    }
-    else
-    {
-      return "error";
-    }
-  }
-
   //  Verificar si un procedimiento está siendo usado en algún plan de tratamiento
   public static function mdlVerificarUsoProcedimiento($tabla, $codProcedimiento)
   {
     $statement = Conexion::conn()->prepare("SELECT COUNT(IdProcedimiento) AS TotalUso FROM $tabla WHERE IdProcedimiento = $codProcedimiento ");
+    $statement -> execute();
+    return $statement -> fetch();
+  }
+
+  //  Listar procedimientos de un paciente  
+  public static function mdlListarProcedimientosPaciente($tabla, $codPaciente){
+    $statement = Conexion::conn()->prepare("SELECT
+    tba_procedimiento.NombreProcedimiento, 
+    tba_detalletratamiento.PrecioProcedimiento, 
+    tba_detalletratamiento.IdProcedimiento,
+    tba_detalletratamiento.IdDetalleTratamiento
+  FROM
+    $tabla
+    INNER JOIN
+    tba_detalletratamiento
+    ON 
+      tba_tratamiento.IdTratamiento = tba_detalletratamiento.IdTratamiento
+    INNER JOIN
+    tba_procedimiento
+    ON 
+      tba_detalletratamiento.IdProcedimiento = tba_procedimiento.IdProcedimiento
+  WHERE
+    tba_tratamiento.IdPaciente = $codPaciente");
+    $statement -> execute();
+    return $statement -> fetchAll();
+  }
+
+  //  Mostrar el costo del procedimiento
+  public static function mdlMostrarCostoDetalle($tabla, $codDetalleTratamiento){
+    $statement = Conexion::conn()->prepare("SELECT
+    tba_detalletratamiento.PrecioProcedimiento
+  FROM
+    $tabla
+  WHERE
+    tba_detalletratamiento.IdDetalleTratamiento = $codDetalleTratamiento");
     $statement -> execute();
     return $statement -> fetch();
   }

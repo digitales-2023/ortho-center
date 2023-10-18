@@ -53,6 +53,7 @@
                           <button title="Descargar"class="btn btn-info btnDescargarOdontograma" id="btnDescargarOdontograma" codHistoria="'.$value["IdHistoriaClinica"].'"><i class="fa fa-cloud-download"></i></button>
                           <button title="Editar"class="btn btn-warning btnEditarHistoria" id="btnEditarHistoria" codPaciente="'.$value["IdPaciente"].'" codHistoria="'.$value["IdHistoriaClinica"].'"><i class="fa-solid fa-pencil"></i></button>
                           <button title="Tratamiento"class="btn btn-primary btnListarPlanTratamiento" id="btnListarPlanTratamiento" codPaciente="'.$value["IdPaciente"].'" codHistoria="'.$value["IdHistoriaClinica"].'"><i class="fa fa-list"></i></button>
+                          <button title="Visitas"class="btn btn-secondary btnListarVisitas" id="btnListarVisitas" codPaciente="'.$value["IdPaciente"].'" codHistoria="'.$value["IdHistoriaClinica"].'"><i class="fa fa-history"></i></button>
                           <button title="Eliminar"class="btn btn-danger btnEliminarHistoria" codPaciente="'.$value["IdPaciente"].'" codHistoria="'.$value["IdHistoriaClinica"].'"><i class="fa-solid fa-trash"></i></button>
                         </td>
                       </tr>';

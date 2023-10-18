@@ -247,10 +247,9 @@ $(".formularioEditarPago").on("click", ".btnBuscarPorDNI", function () {
 //  Redirigir la vista para visualizar los pagos actuales
 $(".table").on("click", ".btnVisualizarPagos", function () {
   var codPaciente = $(this).attr("codPaciente");
-  var codHistoria = $(this).attr("codHistoria");
   if(codPaciente!=null && codPaciente!=null)
   {
-    window.location = "index.php?ruta=visualizarPagos&codPaciente="+codPaciente+"&codHistoria="+codHistoria;
+    window.location = "index.php?ruta=visualizarPagos&codPaciente="+codPaciente;
   }
 });
 

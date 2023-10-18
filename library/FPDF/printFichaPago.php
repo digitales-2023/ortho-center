@@ -132,7 +132,7 @@ $codPaciente = $_GET["codPaciente"];
 $datosPaciente = ControllerPacientes::ctrMostrarDatosImprimir($codPaciente);
 $codHistoria = ControllerHistorias::ctrObtenerCodHistoria($codPaciente);
 
-//  Pagos realizados
+//  Pagos realizados -> CAMBIAR FICHA DE PAGO
 $listaPagos = ControllerPagos::ctrMostrarPagosPorPaciente($codPaciente);
 
 // Creacion de los datos de la historia clínica

@@ -11,14 +11,6 @@ class ModelPagos
     return $statement->fetchAll();
   }
 
-  //  Mostrar metodos de pago
-  public static function mdlMostrarTiposDePago($tabla)
-  {
-    $statement = Conexion::conn()->prepare("SELECT tba_tipodepago.IdTipoPago, tba_tipodepago.DescripcionTipo FROM $tabla");
-    $statement->execute();
-    return $statement->fetchAll();
-  }
-
   //  Eliminar un pago
   public static function mdlEliminarPago($tabla, $codPago)
   {
@@ -56,62 +48,39 @@ class ModelPagos
     return $statement->fetch();
   }
 
-  //  Editar un pago
-  public static function mdlUpdatePago($tabla, $datosUpdate)
-  {
-    $statement = Conexion::conn()->prepare("UPDATE $tabla SET IdPaciente=:IdPaciente, IdTipoPago=:IdTipoPago, TotalPago=:TotalPago, ObservacionPago=:ObservacionPago, FechaPago=:FechaPago, FechaActualizacion=:FechaActualizacion WHERE IdPago=:IdPago");
-    $statement->bindParam(":IdPaciente", $datosUpdate["IdPaciente"], PDO::PARAM_STR);
-    $statement->bindParam(":IdTipoPago", $datosUpdate["IdTipoPago"], PDO::PARAM_STR);
-    $statement->bindParam(":TotalPago", $datosUpdate["TotalPago"], PDO::PARAM_STR);
-    $statement->bindParam(":ObservacionPago", $datosUpdate["ObservacionPago"], PDO::PARAM_STR);
-    $statement->bindParam(":FechaPago", $datosUpdate["FechaPago"], PDO::PARAM_STR);
-    $statement->bindParam(":FechaActualizacion", $datosUpdate["FechaActualizacion"], PDO::PARAM_STR);
-    $statement->bindParam(":IdPago", $datosUpdate["IdPago"], PDO::PARAM_STR);
-    if ($statement->execute()) {
-      return "ok";
-    } else {
-      return "error";
-    }
-  }
-
-  //  Mostrar el costo total de un paciente por tratamiento
-  public static function mdlMostrarTotalPorPaciente($tabla)
+  //  Mostrar la lista de pagos por paciente
+  public static function mdlMostrarPagosPorPaciente($tabla, $codPaciente)
   {
     $statement = Conexion::conn()->prepare("SELECT
-    tba_paciente.IdPaciente, 
-    tba_paciente.NombrePaciente, 
-    tba_paciente.ApellidoPaciente, 
-	  tba_paciente.DNIPaciente,
-    tba_tratamiento.IdHistoriaClinica, 
-    tba_tratamiento.TotalTratamiento, 
-    tba_tratamiento.TotalPagado
-    FROM
+    tba_pago.IdPago, 
+    tba_pago.TotalPagado, 
+    tba_pago.FechaPago, 
+    tba_pago.ObservacionPago, 
+    tba_visita.IdVisita,
+    tba_visita.IdDetalleTratamiento,
+    tba_procedimiento.NombreProcedimiento
+  FROM
     $tabla
     INNER JOIN
     tba_paciente
     ON 
       tba_pago.IdPaciente = tba_paciente.IdPaciente
-    INNER JOIN
-    tba_tratamiento
-    INNER JOIN
+    LEFT JOIN
+    tba_visita
+    ON 
+      tba_pago.IdPago = tba_visita.IdPago
+    LEFT JOIN
     tba_detalletratamiento
     ON 
-      tba_tratamiento.IdTratamiento = tba_detalletratamiento.IdTratamiento
-    INNER JOIN
-    tba_historiaclinica
+      tba_visita.IdDetalleTratamiento = tba_detalletratamiento.IdDetalleTratamiento
+    LEFT JOIN
+    tba_procedimiento
     ON 
-      tba_tratamiento.IdHistoriaClinica = tba_historiaclinica.IdHistoriaClinica AND
-      tba_paciente.IdPaciente = tba_historiaclinica.IdPaciente
-  GROUP BY
-    tba_paciente.IdPaciente");
-    $statement->execute();
-    return $statement->fetchAll();
-  }
-
-  //  Mostrar la lista de pagos por paciente
-  public static function mdlMostrarPagosPorPaciente($tabla, $codPaciente)
-  {
-    $statement = Conexion::conn()->prepare("SELECT tba_pago.IdPago, tba_pago.IdTipoPago, tba_pago.TotalPago, tba_pago.FechaPago, tba_pago.ObservacionPago, tba_tipodepago.DescripcionTipo FROM $tabla INNER JOIN tba_tipodepago ON tba_pago.IdTipoPago = tba_tipodepago.IdTipoPago INNER JOIN tba_paciente ON tba_pago.IdPaciente = tba_paciente.IdPaciente WHERE tba_pago.IdPaciente = $codPaciente ORDER BY IdPago DESC");
+      tba_detalletratamiento.IdProcedimiento = tba_procedimiento.IdProcedimiento
+  WHERE
+    tba_pago.IdPaciente = $codPaciente
+  ORDER BY
+    IdPago ASC");
     $statement->execute();
     return $statement->fetchAll();
   }
@@ -157,25 +126,27 @@ class ModelPagos
   public static function mdlMostrarListaPacientesTratamiento($tabla)
   {
     $statement = Conexion::conn()->prepare("SELECT
-    tba_pago.IdPago, 
-    tba_pago.CostoTotal, 
-    tba_pago.TotalPagado, 
-    tba_pago.SaldoActual, 
     tba_paciente.IdPaciente, 
     tba_paciente.NombrePaciente, 
-    tba_paciente.ApellidoPaciente, 
+    tba_paciente.ApellidoPaciente,
     tba_paciente.DNIPaciente, 
-    tba_historiaclinica.IdHistoriaClinica
+    SUM(tba_pago.TotalPagado) AS TotalCancelado, 
+    tba_tratamiento.TotalTratamiento
   FROM
+    $tabla
+    LEFT JOIN
     tba_pago
-    INNER JOIN
-    tba_paciente
     ON 
-      tba_pago.IdPaciente = tba_paciente.IdPaciente
-    INNER JOIN
-    tba_historiaclinica
+      tba_paciente.IdPaciente = tba_pago.IdPaciente
+    LEFT JOIN
+    tba_tratamiento
     ON 
-      tba_paciente.IdPaciente = tba_historiaclinica.IdPaciente");
+      tba_paciente.IdPaciente = tba_tratamiento.IdPaciente
+  WHERE
+    tba_tratamiento.TotalTratamiento <> ''
+  GROUP BY
+    tba_paciente.IdPaciente
+  ");
     $statement->execute();
     return $statement->fetchAll();
   }
@@ -188,6 +159,24 @@ class ModelPagos
     $statement->bindParam(":IdHistoriaClinica", $datosCreate["IdHistoriaClinica"], PDO::PARAM_STR);
     $statement->bindParam(":FechaCreacion", $datosCreate["FechaCreacion"], PDO::PARAM_STR);
     $statement->bindParam(":FechaActualizacion", $datosCreate["FechaActualizacion"], PDO::PARAM_STR);
+    if ($statement->execute()) {
+      return "ok";
+    } else {
+      return "error";
+    }
+  }
+
+  //  Crear un pago a partir de una visita
+  public static function mdlCrearPagoVisita($tabla, $datosPago)
+  {
+    $statement = Conexion::conn()->prepare("INSERT INTO $tabla (IdPaciente, IdHistoriaClinica, TotalPagado, FechaPago, ObservacionPago, FechaCreacion, FechaActualizacion) VALUES(:IdPaciente, :IdHistoriaClinica, :TotalPagado, :FechaPago, :ObservacionPago, :FechaCreacion, :FechaActualizacion)");
+    $statement->bindParam(":IdPaciente", $datosPago["IdPaciente"], PDO::PARAM_STR);
+    $statement->bindParam(":IdHistoriaClinica", $datosPago["IdHistoriaClinica"], PDO::PARAM_STR);
+    $statement->bindParam(":TotalPagado", $datosPago["TotalPagado"], PDO::PARAM_STR);
+    $statement->bindParam(":FechaPago", $datosPago["FechaPago"], PDO::PARAM_STR);
+    $statement->bindParam(":ObservacionPago", $datosPago["ObservacionPago"], PDO::PARAM_STR);
+    $statement->bindParam(":FechaCreacion", $datosPago["FechaCreacion"], PDO::PARAM_STR);
+    $statement->bindParam(":FechaActualizacion", $datosPago["FechaActualizacion"], PDO::PARAM_STR);
     if ($statement->execute()) {
       return "ok";
     } else {

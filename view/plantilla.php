@@ -34,7 +34,8 @@
           $_GET["ruta"] == "editarHistoria" ||
           $_GET["ruta"] == "planTratamiento" ||
           $_GET["ruta"] == "pagosPendientes" ||
-          $_GET["ruta"] == "visualizarPagos" ||      
+          $_GET["ruta"] == "visualizarPagos" ||
+          $_GET["ruta"] == "historialVisitas" ||  
           $_GET["ruta"] == "signout" 
         )
         {
@@ -76,6 +77,7 @@
   <script src="js/historias.js"></script>
   <script src="js/tratamiento.js"></script>
   <script src="js/pagos.js"></script>
+  <script src="js/visitas.js"></script>
 
   <script src="assets/chartCostoRango.js"></script>
   <script src="assets/chartCentroCosto.js"></script>

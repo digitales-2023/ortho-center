@@ -134,14 +134,6 @@ class ControllerPacientes
     }
   }
 
-  //  Mostrar los pacientes para la historia clínica --> REVISAR ASDASDASda
-  public static function ctrMostrarPacientesHistoria()
-  {
-    $tabla = "tba_paciente";
-    $listaPacientes = ModelPacientes::mdlMostrarPacientesHistoria($tabla);
-    return $listaPacientes;
-  }
-
   //  Update datos del paciente en la historia clínica
   public static function ctrUpdateDatosPaciente($datosUpdatePaciente)
   {

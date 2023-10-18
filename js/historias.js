@@ -70,6 +70,16 @@ $(".table").on("click", ".btnListarPlanTratamiento", function () {
   }
 });
 
+//  Redirigir la vista para ver las visitas
+$(".table").on("click", ".btnListarVisitas", function () {
+  var codHistoria = $(this).attr("codHistoria");
+  var codPaciente = $(this).attr("codPaciente");
+  if(codHistoria!=null && codPaciente!=null)
+  {
+    window.location = "index.php?ruta=historialVisitas&codHistoria="+codHistoria+"&codPaciente="+codPaciente;
+  }
+});
+
 //  Alerta para eliminar una historia
 $(".table").on("click", ".btnEliminarHistoria", function () {
   var codHistoria = $(this).attr("codHistoria");

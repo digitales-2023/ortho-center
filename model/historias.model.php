@@ -66,49 +66,10 @@ class ModelHistorias
     return $statement -> fetch();
   }
 
-  //  Crear detalle de la historia
-  public static function mdlCrearDetalleHistoria($tabla, $datosCreateDetalle)
-  {
-    $statement = Conexion::conn()->prepare("INSERT INTO $tabla (IdHistoriaClinica, IdTratamiento, PresionArterial, Pulso, Temperatura, FrecuenciaCardiaca, FrecuenciaRespiratoria, ExamenOdonto, DiagnosticoPresuntivo, DiagnosticoDefinitivo, Pronostico, TratamientoPaciente, InformacionAlta, UsuarioCreado, UsuarioActualizado, FechaCreado, FechaActualiza) VALUES(:IdHistoriaClinica, :IdTratamiento, :PresionArterial, :Pulso, :Temperatura, :FrecuenciaCardiaca, :FrecuenciaRespiratoria, :ExamenOdonto, :DiagnosticoPresuntivo, :DiagnosticoDefinitivo, :Pronostico, :TratamientoPaciente, :InformacionAlta, :UsuarioCreado, :UsuarioActualizado, :FechaCreado, :FechaActualiza)");
-    $statement -> bindParam(":IdHistoriaClinica", $datosCreateDetalle["IdHistoriaClinica"], PDO::PARAM_STR);
-    $statement -> bindParam(":IdTratamiento", $datosCreateDetalle["IdTratamiento"], PDO::PARAM_STR);
-    $statement -> bindParam(":PresionArterial", $datosCreateDetalle["PresionArterial"], PDO::PARAM_STR);
-    $statement -> bindParam(":Pulso", $datosCreateDetalle["Pulso"], PDO::PARAM_STR);
-    $statement -> bindParam(":Temperatura", $datosCreateDetalle["Temperatura"], PDO::PARAM_STR);
-    $statement -> bindParam(":FrecuenciaCardiaca", $datosCreateDetalle["FrecuenciaCardiaca"], PDO::PARAM_STR);
-    $statement -> bindParam(":FrecuenciaRespiratoria", $datosCreateDetalle["FrecuenciaRespiratoria"], PDO::PARAM_STR);
-    $statement -> bindParam(":ExamenOdonto", $datosCreateDetalle["ExamenOdonto"], PDO::PARAM_STR);
-    $statement -> bindParam(":DiagnosticoPresuntivo", $datosCreateDetalle["DiagnosticoPresuntivo"], PDO::PARAM_STR);
-    $statement -> bindParam(":DiagnosticoDefinitivo", $datosCreateDetalle["DiagnosticoDefinitivo"], PDO::PARAM_STR);
-    $statement -> bindParam(":Pronostico", $datosCreateDetalle["Pronostico"], PDO::PARAM_STR);
-    $statement -> bindParam(":TratamientoPaciente", $datosCreateDetalle["TratamientoPaciente"], PDO::PARAM_STR);
-    $statement -> bindParam(":InformacionAlta", $datosCreateDetalle["InformacionAlta"], PDO::PARAM_STR);
-    $statement -> bindParam(":UsuarioCreado", $datosCreateDetalle["UsuarioCreado"], PDO::PARAM_STR);
-    $statement -> bindParam(":UsuarioActualizado", $datosCreateDetalle["UsuarioActualizado"], PDO::PARAM_STR);
-    $statement -> bindParam(":FechaCreado", $datosCreateDetalle["FechaCreado"], PDO::PARAM_STR);
-    $statement -> bindParam(":FechaActualiza", $datosCreateDetalle["FechaActualiza"], PDO::PARAM_STR);
-    if($statement -> execute())
-    {
-      return "ok";
-    }
-    else
-    {
-      return "error";
-    }
-  }
-
   //  Mostrar la cabecera de la historia
   public static function mdlMostrarCabeceraHistoria($tabla, $codHistoria)
   {
     $statement = Conexion::conn()->prepare("SELECT tba_historiaclinica.IdHistoriaClinica, tba_historiaclinica.MotivoConsulta, tba_historiaclinica.CheckAlergias, tba_historiaclinica.DescripcionAlergias, tba_historiaclinica.CheckHepatitis, tba_historiaclinica.DescripcionHepatitis, tba_historiaclinica.CheckDiabetes, tba_historiaclinica.DescripcionDiabetes, tba_historiaclinica.CheckHipertension, tba_historiaclinica.DescripcionHipertension, tba_historiaclinica.CheckHemorragias, tba_historiaclinica.DescripcionHemorragias, tba_historiaclinica.CheckRenal, tba_historiaclinica.DescripcionRenal, tba_historiaclinica.CheckEndocrina, tba_historiaclinica.DescripcionEndocrina, tba_historiaclinica.CheckOtros, tba_historiaclinica.DescripcionOtros, tba_historiaclinica.CheckReaccion, tba_historiaclinica.DescripcionReaccion, tba_historiaclinica.CheckExodoncia, tba_historiaclinica.DescripcionExodoncia, tba_historiaclinica.CheckMedicamento, tba_historiaclinica.DescripcionMedicamento, tba_historiaclinica.CheckGestacion, tba_historiaclinica.DescripcionGestacion FROM $tabla WHERE tba_historiaclinica.IdHistoriaClinica = $codHistoria");
-    $statement -> execute();
-    return $statement -> fetch();
-  }
-
-  //  Mostrar el detall de la historia clinica
-  public static function mdlMostrarDetalleHistoria($tabla, $codHistoria)
-  {
-    $statement = Conexion::conn()->prepare("SELECT tba_detallehistoriaclinica.IdTratamiento, tba_detallehistoriaclinica.PresionArterial, tba_detallehistoriaclinica.Pulso, tba_detallehistoriaclinica.Temperatura, tba_detallehistoriaclinica.FrecuenciaCardiaca, tba_detallehistoriaclinica.FrecuenciaRespiratoria, tba_detallehistoriaclinica.ExamenOdonto, tba_detallehistoriaclinica.DiagnosticoPresuntivo, tba_detallehistoriaclinica.DiagnosticoDefinitivo, tba_detallehistoriaclinica.Pronostico, tba_detallehistoriaclinica.TratamientoPaciente, tba_detallehistoriaclinica.InformacionAlta FROM $tabla WHERE tba_detallehistoriaclinica.IdHistoriaClinica = $codHistoria");
     $statement -> execute();
     return $statement -> fetch();
   }
@@ -145,34 +106,6 @@ class ModelHistorias
     $statement -> bindParam(":UsuarioActualizado", $datosUpdate["UsuarioActualizado"], PDO::PARAM_STR);
     $statement -> bindParam(":FechaActualiza", $datosUpdate["FechaActualiza"], PDO::PARAM_STR);
     $statement -> bindParam(":IdPaciente", $datosUpdate["IdPaciente"], PDO::PARAM_STR);
-    if($statement -> execute())
-    {
-      return "ok";
-    }
-    else
-    {
-      return "error";
-    }
-  }
-
-  //  Update del detalle de la historia
-  public static function mdlUpdateDetalleHistoria($tabla, $datosUpdate)
-  {
-    $statement = Conexion::conn()->prepare("UPDATE $tabla SET PresionArterial=:PresionArterial, Pulso=:Pulso, Temperatura=:Temperatura, FrecuenciaCardiaca=:FrecuenciaCardiaca, FrecuenciaRespiratoria=:FrecuenciaRespiratoria, ExamenOdonto=:ExamenOdonto, DiagnosticoPresuntivo=:DiagnosticoPresuntivo, DiagnosticoDefinitivo=:DiagnosticoDefinitivo, Pronostico=:Pronostico, TratamientoPaciente=:TratamientoPaciente, InformacionAlta=:InformacionAlta, UsuarioActualizado=:UsuarioActualizado, FechaActualiza=:FechaActualiza WHERE IdHistoriaClinica=:IdHistoriaClinica");
-    $statement -> bindParam(":PresionArterial", $datosUpdate["PresionArterial"], PDO::PARAM_STR);
-    $statement -> bindParam(":Pulso", $datosUpdate["Pulso"], PDO::PARAM_STR);
-    $statement -> bindParam(":Temperatura", $datosUpdate["Temperatura"], PDO::PARAM_STR);
-    $statement -> bindParam(":FrecuenciaCardiaca", $datosUpdate["FrecuenciaCardiaca"], PDO::PARAM_STR);
-    $statement -> bindParam(":FrecuenciaRespiratoria", $datosUpdate["FrecuenciaRespiratoria"], PDO::PARAM_STR);
-    $statement -> bindParam(":ExamenOdonto", $datosUpdate["ExamenOdonto"], PDO::PARAM_STR);
-    $statement -> bindParam(":DiagnosticoPresuntivo", $datosUpdate["DiagnosticoPresuntivo"], PDO::PARAM_STR);
-    $statement -> bindParam(":DiagnosticoDefinitivo", $datosUpdate["DiagnosticoDefinitivo"], PDO::PARAM_STR);
-    $statement -> bindParam(":Pronostico", $datosUpdate["Pronostico"], PDO::PARAM_STR);
-    $statement -> bindParam(":TratamientoPaciente", $datosUpdate["TratamientoPaciente"], PDO::PARAM_STR);
-    $statement -> bindParam(":InformacionAlta", $datosUpdate["InformacionAlta"], PDO::PARAM_STR);
-    $statement -> bindParam(":UsuarioActualizado", $datosUpdate["UsuarioActualizado"], PDO::PARAM_STR);
-    $statement -> bindParam(":FechaActualiza", $datosUpdate["FechaActualiza"], PDO::PARAM_STR);
-    $statement -> bindParam(":IdHistoriaClinica", $datosUpdate["IdHistoriaClinica"], PDO::PARAM_STR);
     if($statement -> execute())
     {
       return "ok";
