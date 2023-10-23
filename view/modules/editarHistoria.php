@@ -41,7 +41,6 @@
                   <input type="file" name="nuevoOdontograma" id="nuevoOdontograma" codHistoria="<?php echo $_GET["codHistoria"] ?>" style="display:none;">
                 </label>
                 <button type="button" class="btn btn-warning btnDescargarOdontograma ms-2" id="btnDescargarOdontograma" codHistoria="<?php echo $_GET["codHistoria"] ?>"><i class="fa fa-cloud-download" aria-hidden="true"></i> Descargar Control</button>
-                <button type="button" class="btn btn-success btnDescargarHistoria ms-2" id="btnDescargarHistoria" codHistoria="<?php echo $_GET["codHistoria"] ?>"><i class="fa fa-print" aria-hidden="true"></i> Imprimir Historia Clinica</button>
               </div>
             </div>
 

@@ -116,4 +116,20 @@ class ControllerVisitas
     $respuesta = ModelVisitas::mdlObtenerCodPago($tabla, $codVisita);
     return $respuesta;
   }
+
+  //  Mostrar el historial de visitas por el codigo de historia clínica
+  public static function ctrMostrarHistorialVisitas($codHistoria)
+  {
+    $tabla = "tba_visita";
+    $listaVisitas = ModelVisitas::mdlMostrarHistorialVisitas($tabla, $codHistoria);
+    return $listaVisitas;
+  }
+
+  //  Eliminar las visitas que tengan el codigo de la historia clínica
+  public static function ctrEliminarVisitas($codHistoria)
+  {
+    $tabla = "tba_visita";
+    $eliminarVisita = ModelVisitas::mdlEliminarVisitas($tabla, $codHistoria);
+    return $eliminarVisita;
+  }
 }

@@ -259,7 +259,7 @@ $(".cerrarVisualizar").on("click", function(){
 });
 
 //  Descargar la historia clínica completa con el detalle de los procedimientos más
-$(".table").on("click", ".btnFichaPagos", function () {
+$(".table").on("click", ".btnImprimirFicha", function () {
   codPaciente = $(this).attr('codPaciente');
   if(codPaciente != null || codPaciente != undefined || codPaciente != '')
   {

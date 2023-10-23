@@ -86,7 +86,7 @@ $(".table").on("click", ".btnEliminarHistoria", function () {
   var codPaciente = $(this).attr("codPaciente");
   swal.fire({
     title: '¿Está seguro de borrar la Historia Clínica?',
-    text: "¡No podrá revertir el cambio! Se borrarán todos los datos de la historia clínica",
+    text: "¡No podrá revertir el cambio! Se borrarán todos los datos de la historia clínica como el tratamiento y el historial de visitas",
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
@@ -218,46 +218,12 @@ function sumaProcedimientos()
   $("#nuevoTotalTratamiento").val(sumaTotalTratamiento.toFixed(2));
 }
 
-//  Descargar solo la historia clínica
-$("#btnDescargarHistoria").on("click", function(){
-  codHistoria = $(this).attr('codHistoria');
-  if(codHistoria != null || codHistoria != undefined || codHistoria != '')
-  {
-    window.open("library/FPDF/printHistoriaClinica.php?&codHistoria=" + codHistoria, "_blank");
-  }
-  else
-  {
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: '¡No se encontró una Historia Clínica!',
-    });
-  }
-});
-
 //  Descargar la historia clínica completa con el detalle de los procedimientos más
 $(".table").on("click", ".btnImprimirHistoria", function () {
   codHistoria = $(this).attr('codHistoria');
   if(codHistoria != null || codHistoria != undefined || codHistoria != '')
   {
     window.open("library/FPDF/printHistoriaCompleta.php?&codHistoria=" + codHistoria, "_blank");
-  }
-  else
-  {
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: '¡No se encontró una Historia Clínica!',
-    });
-  }
-});
-
-//  Descargar solo la historia clínica
-$("#btnSubirOdontograma").on("click", function(){
-  codHistoria = $(this).attr('codHistoria');
-  if(codHistoria != null || codHistoria != undefined || codHistoria != '')
-  {
-    window.open("library/FPDF/printHistoriaClinica.php?&codHistoria=" + codHistoria, "_blank");
   }
   else
   {
@@ -292,7 +258,7 @@ $("#nuevoOdontograma").on("change", function(){
         Swal.fire({
           icon: 'success',
           title: 'Correcto',
-          text: '¡Pago Registrado Exitosamente!',
+          text: '¡El registro se subió correctamente!',
         }).then((result) => {
           if (result.isConfirmed) {
             location.reload();

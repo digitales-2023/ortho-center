@@ -9,7 +9,7 @@ class ControllerTratamiento
     $respuesta = ModelTratamiento::mdlCrearTratamiento($tabla, $datosCreateTratamiento);
     return $respuesta;
   }
-  
+
   //  Obtener el tratamiento de un paciente en específico
   public static function ctrObtenerIdTratamiento($codPaciente)
   {
@@ -53,37 +53,29 @@ class ControllerTratamiento
   //  Editar el plan de tratamiento
   public static function ctrEditarPlanTratamiento()
   {
-    if(isset($_POST["listarNuevaListaProcedimientos"]))
-    {
-      if($_POST["listarNuevaListaProcedimientos"] != '')
-      {
+    if (isset($_POST["listarNuevaListaProcedimientos"])) {
+      if ($_POST["listarNuevaListaProcedimientos"] != '') {
         $codPaciente = $_GET["codPaciente"];
         $tablaDetalleTratamiento = "tba_detalletratamiento";
-        
+
         $listaProcedimientos = json_decode($_POST["listarNuevaListaProcedimientos"], true);
         $idTratamiento = self::ctrObtenerIdTratamiento($codPaciente);
-  
+
         //  Eliminamos el tratamiento actual para crear una nueva con todas las características que se quiera
         $respuestaEliminarDetalle = ModelTratamiento::mdlEliminarDetalleActual($tablaDetalleTratamiento, $idTratamiento["IdTratamiento"]);
-        
-        if($respuestaEliminarDetalle == "ok")
-        {
+
+        if ($respuestaEliminarDetalle == "ok") {
           $totalTratamiento = $_POST["editarTotalTratamiento"];
-          $respuestaUpdateTratamiento = ControllerTratamiento::ctrUpdatePrecioTratamiento($idTratamiento["IdTratamiento"] ,$totalTratamiento);
-          if($respuestaUpdateTratamiento == "ok")
-          {
-            foreach($listaProcedimientos as $value)
-            {
+          $respuestaUpdateTratamiento = ControllerTratamiento::ctrUpdatePrecioTratamiento($idTratamiento["IdTratamiento"], $totalTratamiento);
+          if ($respuestaUpdateTratamiento == "ok") {
+            foreach ($listaProcedimientos as $value) {
               //  Si el estado es true, colocamos 2, sino colocamos 1 -> 1 es realizado y 2 no realizado
-              if($value["EstadoProcedimiento"] == true)
-              {
+              if ($value["EstadoProcedimiento"] == true) {
                 $estado = '2';
-              }
-              else
-              {
+              } else {
                 $estado = '1';
               }
-  
+
               $datosDetalleTratamiento = array(
                 "IdTratamiento" => $idTratamiento["IdTratamiento"],
                 "IdProcedimiento" => $value["CodProcedimiento"],
@@ -94,9 +86,8 @@ class ControllerTratamiento
               );
               $respuestaDetalleTratamiento = ModelTratamiento::mdlCrearEditadoDetalleTratamiento($tablaDetalleTratamiento, $datosDetalleTratamiento);
             }
-  
-            if($respuestaDetalleTratamiento == "ok")
-            {
+
+            if ($respuestaDetalleTratamiento == "ok") {
               echo '
                 <script>
                   Swal.fire({
@@ -109,9 +100,7 @@ class ControllerTratamiento
                     }
                   });
                 </script>';
-            }
-            else
-            {
+            } else {
               echo '
                 <script>
                   Swal.fire({
@@ -125,9 +114,7 @@ class ControllerTratamiento
                   });
                 </script>';
             }
-          }
-          else
-          {
+          } else {
             echo '
               <script>
                 Swal.fire({
@@ -141,9 +128,7 @@ class ControllerTratamiento
                 });
               </script>';
           }
-        }
-        else
-        {
+        } else {
           echo '
             <script>
               Swal.fire({
@@ -157,9 +142,7 @@ class ControllerTratamiento
               });
             </script>';
         }
-      }
-      else
-      {
+      } else {
         echo '
           <script>
             Swal.fire({
@@ -207,7 +190,7 @@ class ControllerTratamiento
     $respuesta = ModelTratamiento::mdlObtenerTotalRealizado($tabla, $codHistoria);
     return $respuesta;
   }
-  
+
   //  Verificar uso de tratamiento
   public static function ctrVerificarUsoProcedimiento($codProcedimiento)
   {
@@ -217,16 +200,36 @@ class ControllerTratamiento
   }
 
   //  Mostrar los procedimientos de una historia en específico
-  public static function ctrListarProcedimientosPaciente($codPaciente){
+  public static function ctrListarProcedimientosPaciente($codPaciente)
+  {
     $tabla = "tba_tratamiento";
     $listarProcedimientos = ModelTratamiento::mdlListarProcedimientosPaciente($tabla, $codPaciente);
     return $listarProcedimientos;
   }
 
   //  Mostrar el costo del tratamiento
-  public static function ctrMostrarCostoDetalle($codDetalleTratamiento){
+  public static function ctrMostrarCostoDetalle($codDetalleTratamiento)
+  {
     $tabla = "tba_detalletratamiento";
     $precioTratamiento = ModelTratamiento::mdlMostrarCostoDetalle($tabla, $codDetalleTratamiento);
     return $precioTratamiento;
+  }
+
+  //  Eliminar tratamiento y detalle de tratamiento
+  public static function ctrEliminarTratamiento($codTratamiento)
+  {
+    $tablaTratamiento = "tba_tratamiento";
+    $tablaDetalle = "tba_detalletratamiento";
+    $eliminarDetalle = ModelTratamiento::mdlEliminarDetalleActual($tablaDetalle, $codTratamiento);
+    if ($eliminarDetalle == "ok") {
+      $eliminarTratamiento = ModelTratamiento::mdlEliminarTratamiento($tablaTratamiento, $codTratamiento);
+      if($eliminarTratamiento == "ok") {
+        return "ok";
+      } else {
+        return "error";
+      }
+    } else {
+      return "error";
+    }
   }
 }

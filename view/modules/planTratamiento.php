@@ -30,7 +30,6 @@
 
             <div class="container row g-3 p-3 justify-content-between">
               <h3 class="col-3 d-inline-flex-center">Datos Paciente</h3>
-              <button type="button" class="col-3 d-inline-flex-center btn btn-success btnDescargarTratamiento" id="btnDescargarTratamiento" codHistoria="<?php echo $_GET["codHistoria"] ?>" codPaciente="<?php echo $_GET["codPaciente"] ?>"><i class="fa fa-print" aria-hidden="true"></i> Procedimientos Realizados</button>
             </div>
 
             <!-- Seleccionar al paciente -->
@@ -113,7 +112,7 @@
                   
                           <!-- Precio del procedimiento -->
                           <div class="col-lg-2 precioProcedimiento">
-                            <input type="number" class="form-control editarPrecioTratamiento" name="editarPrecioTratamiento" min="1.00" step="0.01" value="' . $value["PrecioProcedimiento"] . '" required>
+                            <input type="number" class="form-control editarPrecioTratamiento" name="editarPrecioTratamiento" min="0.00" step="0.01" value="' . $value["PrecioProcedimiento"] . '" required>
                           </div> 
                         </div>
                       ';
@@ -131,7 +130,7 @@
             <div class="row" style="font-weight: bold">
               <div class="col-lg-2"></div>
               <div class="col-lg-2"><span>Costo Total(S/.):</span></div>
-              <div class="col-lg-2"><input type="number" style="text-align: right;" class="form-control input-lg" id="editarTotalTratamiento" name="editarTotalTratamiento" placeholder="0.00" value="" readonly></div>
+              <div class="col-lg-2"><input type="number" style="text-align: right;" class="form-control input-lg" id="editarTotalTratamiento" name="editarTotalTratamiento" placeholder="0.00" value="<?php echo $datosPaciente["TotalTratamiento"] ?>" readonly></div>
             </div>
             <div class="container row g-3 p-3 justify-content-between">
               <button type="button" class="col-1 d-inline-flex-center p-2 btn btn-secondary cerrarHistoria">Cerrar</button>

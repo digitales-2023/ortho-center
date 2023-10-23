@@ -7,19 +7,16 @@ class ModelTratamiento
   public static function mdlCrearTratamiento($tabla, $datosCreateTratamiento)
   {
     $statement = Conexion::conn()->prepare("INSERT INTO $tabla (IdHistoriaClinica, IdPaciente, UsuarioCreado, UsuarioActualiza, FechaCreacion, FechaActualizacion) VALUES(:IdHistoriaClinica, :IdPaciente, :UsuarioCreado, :UsuarioActualiza, :FechaCreacion, :FechaActualizacion)");
-    $statement -> bindParam(":IdHistoriaClinica", $datosCreateTratamiento["IdHistoriaClinica"], PDO::PARAM_STR);
-    $statement -> bindParam(":IdPaciente", $datosCreateTratamiento["IdPaciente"], PDO::PARAM_STR);
-    $statement -> bindParam(":UsuarioCreado", $datosCreateTratamiento["UsuarioCreado"], PDO::PARAM_STR);
-    $statement -> bindParam(":UsuarioActualiza", $datosCreateTratamiento["UsuarioActualiza"], PDO::PARAM_STR);
-    $statement -> bindParam(":FechaCreacion", $datosCreateTratamiento["FechaCreacion"], PDO::PARAM_STR);
-    $statement -> bindParam(":FechaActualizacion", $datosCreateTratamiento["FechaActualizacion"], PDO::PARAM_STR);
+    $statement->bindParam(":IdHistoriaClinica", $datosCreateTratamiento["IdHistoriaClinica"], PDO::PARAM_STR);
+    $statement->bindParam(":IdPaciente", $datosCreateTratamiento["IdPaciente"], PDO::PARAM_STR);
+    $statement->bindParam(":UsuarioCreado", $datosCreateTratamiento["UsuarioCreado"], PDO::PARAM_STR);
+    $statement->bindParam(":UsuarioActualiza", $datosCreateTratamiento["UsuarioActualiza"], PDO::PARAM_STR);
+    $statement->bindParam(":FechaCreacion", $datosCreateTratamiento["FechaCreacion"], PDO::PARAM_STR);
+    $statement->bindParam(":FechaActualizacion", $datosCreateTratamiento["FechaActualizacion"], PDO::PARAM_STR);
 
-    if($statement -> execute())
-    {
+    if ($statement->execute()) {
       return "ok";
-    }
-    else
-    {
+    } else {
       return "error";
     }
   }
@@ -28,19 +25,16 @@ class ModelTratamiento
   public static function mdlCrearEditadoDetalleTratamiento($tabla, $datosCreateTratamiento)
   {
     $statement = Conexion::conn()->prepare("INSERT INTO $tabla (IdTratamiento, IdProcedimiento, ObservacionProcedimiento, EstadoTratamiento, FechaProcedimiento, PrecioProcedimiento) VALUES(:IdTratamiento, :IdProcedimiento, :ObservacionProcedimiento, :EstadoTratamiento, :FechaProcedimiento, :PrecioProcedimiento)");
-    $statement -> bindParam(":IdTratamiento", $datosCreateTratamiento["IdTratamiento"], PDO::PARAM_STR);
-    $statement -> bindParam(":IdProcedimiento", $datosCreateTratamiento["IdProcedimiento"], PDO::PARAM_STR);
-    $statement -> bindParam(":ObservacionProcedimiento", $datosCreateTratamiento["ObservacionProcedimiento"], PDO::PARAM_STR);
-    $statement -> bindParam(":EstadoTratamiento", $datosCreateTratamiento["EstadoTratamiento"], PDO::PARAM_STR);
-    $statement -> bindParam(":FechaProcedimiento", $datosCreateTratamiento["FechaProcedimiento"], PDO::PARAM_STR);
-    $statement -> bindParam(":PrecioProcedimiento", $datosCreateTratamiento["PrecioProcedimiento"], PDO::PARAM_STR);
+    $statement->bindParam(":IdTratamiento", $datosCreateTratamiento["IdTratamiento"], PDO::PARAM_STR);
+    $statement->bindParam(":IdProcedimiento", $datosCreateTratamiento["IdProcedimiento"], PDO::PARAM_STR);
+    $statement->bindParam(":ObservacionProcedimiento", $datosCreateTratamiento["ObservacionProcedimiento"], PDO::PARAM_STR);
+    $statement->bindParam(":EstadoTratamiento", $datosCreateTratamiento["EstadoTratamiento"], PDO::PARAM_STR);
+    $statement->bindParam(":FechaProcedimiento", $datosCreateTratamiento["FechaProcedimiento"], PDO::PARAM_STR);
+    $statement->bindParam(":PrecioProcedimiento", $datosCreateTratamiento["PrecioProcedimiento"], PDO::PARAM_STR);
 
-    if($statement -> execute())
-    {
+    if ($statement->execute()) {
       return "ok";
-    }
-    else
-    {
+    } else {
       return "error";
     }
   }
@@ -49,22 +43,19 @@ class ModelTratamiento
   public static function mdlObtenerIdTratamiento($tabla, $codPaciente)
   {
     $statement = Conexion::conn()->prepare("SELECT tba_tratamiento.IdTratamiento FROM $tabla WHERE tba_tratamiento.IdPaciente = $codPaciente");
-    $statement -> execute();
-    return $statement -> fetch();
+    $statement->execute();
+    return $statement->fetch();
   }
 
   //  Actualizar el total del tratamiento
   public static function mdlUpdatePrecioTratamiento($tabla, $codTratamiento, $totalTratamiento)
   {
     $statement = Conexion::conn()->prepare("UPDATE $tabla SET TotalTratamiento=:TotalTratamiento WHERE IdTratamiento=:IdTratamiento");
-    $statement -> bindParam(":TotalTratamiento", $totalTratamiento, PDO::PARAM_STR);
-    $statement -> bindParam(":IdTratamiento", $codTratamiento, PDO::PARAM_STR);
-    if($statement -> execute())
-    {
+    $statement->bindParam(":TotalTratamiento", $totalTratamiento, PDO::PARAM_STR);
+    $statement->bindParam(":IdTratamiento", $codTratamiento, PDO::PARAM_STR);
+    if ($statement->execute()) {
       return "ok";
-    }
-    else
-    {
+    } else {
       return "error";
     }
   }
@@ -95,8 +86,8 @@ class ModelTratamiento
       tba_detalletratamiento.IdProcedimiento = tba_procedimiento.IdProcedimiento
   WHERE
     tba_historiaclinica.IdHistoriaClinica = $codHistoria");
-    $statement -> execute();
-    return $statement -> fetchAll();
+    $statement->execute();
+    return $statement->fetchAll();
   }
 
   //  Mostrar el plan de tratamiento de los procedimientos segun el estado del procedimiento
@@ -125,20 +116,17 @@ class ModelTratamiento
       tba_detalletratamiento.IdProcedimiento = tba_procedimiento.IdProcedimiento
   WHERE
     tba_historiaclinica.IdHistoriaClinica = $codHistoria AND tba_detalletratamiento.EstadoTratamiento = $estado");
-    $statement -> execute();
-    return $statement -> fetchAll();
+    $statement->execute();
+    return $statement->fetchAll();
   }
 
   //  Eliminar detalle de tratamiento del paciente
   public static function mdlEliminarDetalleActual($tabla, $codTratamiento)
   {
     $statement = Conexion::conn()->prepare("DELETE FROM $tabla WHERE IdTratamiento = $codTratamiento");
-    if ($statement -> execute())
-    {
+    if ($statement->execute()) {
       return "ok";
-    }
-    else
-    {
+    } else {
       return "error";
     }
   }
@@ -147,22 +135,19 @@ class ModelTratamiento
   public static function mdlObtenerTotalPagado($tabla, $codPaciente)
   {
     $statement = Conexion::conn()->prepare("SELECT tba_tratamiento.IdTratamiento, tba_tratamiento.TotalPagado FROM $tabla WHERE tba_tratamiento.IdPaciente = $codPaciente");
-    $statement -> execute();
-    return $statement -> fetch();
+    $statement->execute();
+    return $statement->fetch();
   }
 
   //  Actualizar el nuevo total pagado
   public static function mldActualizarTotal($tabla, $nuevoTotal, $codPaciente)
   {
     $statement = Conexion::conn()->prepare("UPDATE $tabla SET TotalPagado=:TotalPagado WHERE IdPaciente=:IdPaciente");
-    $statement -> bindParam(":TotalPagado", $nuevoTotal, PDO::PARAM_STR);
-    $statement -> bindParam(":IdPaciente", $codPaciente, PDO::PARAM_STR);
-    if($statement -> execute())
-    {
+    $statement->bindParam(":TotalPagado", $nuevoTotal, PDO::PARAM_STR);
+    $statement->bindParam(":IdPaciente", $codPaciente, PDO::PARAM_STR);
+    if ($statement->execute()) {
       return "ok";
-    }
-    else
-    {
+    } else {
       return "error";
     }
   }
@@ -171,28 +156,29 @@ class ModelTratamiento
   public static function mdlObtenerTotalesTratamiento($tabla, $codPaciente)
   {
     $statement = Conexion::conn()->prepare("SELECT tba_tratamiento.TotalTratamiento, tba_tratamiento.TotalPagado, (TotalTratamiento - TotalPagado) AS DeudaActual FROM $tabla WHERE tba_tratamiento.IdPaciente = $codPaciente");
-    $statement -> execute();
-    return $statement -> fetch();
+    $statement->execute();
+    return $statement->fetch();
   }
 
   //  Obtener el costo total de los procedimientos realizdos hastas ahora
   public static function mdlObtenerTotalRealizado($tabla, $codHistoria)
   {
     $statement = Conexion::conn()->prepare("SELECT SUM(PrecioProcedimiento) AS TotalRealizado FROM $tabla INNER JOIN tba_tratamiento ON tba_detalletratamiento.IdTratamiento = tba_tratamiento.IdTratamiento WHERE tba_tratamiento.IdHistoriaClinica = $codHistoria AND EstadoTratamiento = 2");
-    $statement -> execute();
-    return $statement -> fetch();
+    $statement->execute();
+    return $statement->fetch();
   }
 
   //  Verificar si un procedimiento está siendo usado en algún plan de tratamiento
   public static function mdlVerificarUsoProcedimiento($tabla, $codProcedimiento)
   {
     $statement = Conexion::conn()->prepare("SELECT COUNT(IdProcedimiento) AS TotalUso FROM $tabla WHERE IdProcedimiento = $codProcedimiento ");
-    $statement -> execute();
-    return $statement -> fetch();
+    $statement->execute();
+    return $statement->fetch();
   }
 
   //  Listar procedimientos de un paciente  
-  public static function mdlListarProcedimientosPaciente($tabla, $codPaciente){
+  public static function mdlListarProcedimientosPaciente($tabla, $codPaciente)
+  {
     $statement = Conexion::conn()->prepare("SELECT
     tba_procedimiento.NombreProcedimiento, 
     tba_detalletratamiento.PrecioProcedimiento, 
@@ -210,19 +196,31 @@ class ModelTratamiento
       tba_detalletratamiento.IdProcedimiento = tba_procedimiento.IdProcedimiento
   WHERE
     tba_tratamiento.IdPaciente = $codPaciente");
-    $statement -> execute();
-    return $statement -> fetchAll();
+    $statement->execute();
+    return $statement->fetchAll();
   }
 
   //  Mostrar el costo del procedimiento
-  public static function mdlMostrarCostoDetalle($tabla, $codDetalleTratamiento){
+  public static function mdlMostrarCostoDetalle($tabla, $codDetalleTratamiento)
+  {
     $statement = Conexion::conn()->prepare("SELECT
     tba_detalletratamiento.PrecioProcedimiento
   FROM
     $tabla
   WHERE
     tba_detalletratamiento.IdDetalleTratamiento = $codDetalleTratamiento");
-    $statement -> execute();
-    return $statement -> fetch();
+    $statement->execute();
+    return $statement->fetch();
+  }
+
+  //  Eliminar el tratamiento en su totalidad
+  public static function mdlEliminarTratamiento($tabla, $codTratamiento)
+  {
+    $statement = Conexion::conn()->prepare("DELETE FROM $tabla WHERE IdTratamiento = $codTratamiento");
+    if ($statement->execute()) {
+      return "ok";
+    } else {
+      return "error";
+    }
   }
 }

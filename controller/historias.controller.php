@@ -75,13 +75,12 @@ class ControllerHistorias
             "IdPaciente" => $_GET["codPaciente"],
             "UsuarioCreado" => $_SESSION["idUsuario"],
             "UsuarioActualiza" => $_SESSION["idUsuario"],
-            "FechaCreacion" => date("Y-m-d").' '.date('H:i:s'),
-            "FechaActualizacion" => date("Y-m-d").' '.date('H:i:s'),
+            "FechaCreacion" => date("Y-m-d") . ' ' . date('H:i:s'),
+            "FechaActualizacion" => date("Y-m-d") . ' ' . date('H:i:s'),
           );
           $respuestaTratamiento = ControllerTratamiento::ctrCrearTratamiento($datosCreateTratamiento);
           ControllerPagos::ctrCrearListaPagos($_GET["codPaciente"], $ultimaHistoria["Id"]);
-          if($respuestaTratamiento == "ok")
-          {
+          if ($respuestaTratamiento == "ok") {
             echo '
             <script>
               Swal.fire({
@@ -94,9 +93,7 @@ class ControllerHistorias
                 }
               });
             </script>';
-          }
-          else
-          {
+          } else {
             echo '
               <script>
                 Swal.fire({
@@ -255,39 +252,75 @@ class ControllerHistorias
     return $respuesta;
   }
 
-  //  Eliminar historia clinica -> Solo se eliminará la historia clínica de este paciente, pero no el tratamiento, ni plan de tratamiento, ni los pagos relacionados a estos
+  //  Eliminar historia clinica 
   public static function ctrEliminarHistoria()
   {
     if (isset($_GET["codHistoria"])) {
       $tablaHistoria = "tba_historiaclinica";
       $codHistoria = $_GET["codHistoria"];
-      $eliminarHistoria = ModelHistorias::mdlEliminarHistoria($tablaHistoria, $codHistoria);
-      if ($eliminarHistoria == "ok") {
-        echo '
-        <script>
-          Swal.fire({
-            icon: "success",
-            title: "Correcto",
-            text: "¡La historia clínica ha sido eliminada correctamente!",
-          }).then(function(result){
-            if(result.value){
-              window.location = "historiaClinica";
-            }
-          });
-        </script>';
+      $codPaciente = $_GET["codPaciente"];
+      //  Primero vamos a elimiar el tratamiento, luego el historial de visitas y por último la historia clínica
+      $codTratamiento = ControllerTratamiento::ctrObtenerIdTratamiento($codPaciente);
+
+      $eliminarTratamiento = ControllerTratamiento::ctrEliminarTratamiento($codTratamiento["IdTratamiento"]);
+      if ($eliminarTratamiento == "ok") {
+        $eliminarVisita = ControllerVisitas::ctrEliminarVisitas($codHistoria);
+        if ($eliminarVisita == "ok") {
+          $eliminarHistoria = ModelHistorias::mdlEliminarHistoria($tablaHistoria, $codHistoria);
+          if ($eliminarHistoria == "ok") {
+            echo '
+            <script>
+              Swal.fire({
+                icon: "success",
+                title: "Correcto",
+                text: "¡La historia clínica ha sido eliminada correctamente!",
+              }).then(function(result){
+                if(result.value){
+                  window.location = "historiaClinica";
+                }
+              });
+            </script>';
+          } else {
+            echo '
+            <script>
+              Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "¡Error al tratar de eliminar la historia clínica!",
+              }).then(function(result){
+                if(result.value){
+                  window.location = "historiaClinica";
+                }
+              });
+            </script>';
+          }
+        } else {
+          echo '
+          <script>
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: "¡Error al tratar de eliminar la historia clínica!",
+            }).then(function(result){
+              if(result.value){
+                window.location = "historiaClinica";
+              }
+            });
+          </script>';
+        }
       } else {
         echo '
-        <script>
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "¡Error al tratar de eliminar la historia clínica!",
-          }).then(function(result){
-            if(result.value){
-              window.location = "historiaClinica";
-            }
-          });
-        </script>';
+          <script>
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: "¡Error al tratar de eliminar la historia clínica!",
+            }).then(function(result){
+              if(result.value){
+                window.location = "historiaClinica";
+              }
+            });
+          </script>';
       }
     }
   }

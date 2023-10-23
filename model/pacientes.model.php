@@ -112,7 +112,22 @@ class ModelPacientes
   //  Mostrar los datos del paciente al ver el plan de tratamiento
   public static function mdlMostrarDatosTratamiento($tabla, $codPaciente)
   {
-    $statement = Conexion::conn()->prepare("SELECT tba_paciente.IdPaciente, tba_paciente.NombrePaciente, tba_paciente.ApellidoPaciente, tba_paciente.DNIPaciente, tba_paciente.EdadPaciente, tba_paciente.CelularPaciente FROM $tabla WHERE tba_paciente.IdPaciente = $codPaciente");
+    $statement = Conexion::conn()->prepare("SELECT
+    tba_paciente.IdPaciente, 
+    tba_paciente.NombrePaciente, 
+    tba_paciente.ApellidoPaciente, 
+    tba_paciente.DNIPaciente, 
+    tba_paciente.EdadPaciente, 
+    tba_paciente.CelularPaciente, 
+    tba_tratamiento.TotalTratamiento
+  FROM
+    $tabla
+    INNER JOIN
+    tba_tratamiento
+    ON 
+      tba_paciente.IdPaciente = tba_tratamiento.IdPaciente
+  WHERE
+    tba_paciente.IdPaciente = $codPaciente");
     $statement -> execute();
     return $statement -> fetch();
   }
@@ -142,49 +157,42 @@ class ModelPacientes
     tba_paciente.DNIPaciente, 
     tba_paciente.SexoPaciente, 
     tba_paciente.EdadPaciente, 
-    tba_paciente.FechaNacimiento, 
     tba_paciente.CelularPaciente, 
     tba_paciente.DomicilioPaciente, 
     tba_paciente.LugarProcedencia, 
-    tba_paciente.LugarNacimiento, 
-    tba_paciente.GradoInstruccion, 
-    tba_paciente.RazaPaciente, 
     tba_paciente.OcupacionPaciente, 
-    tba_paciente.ReligionPaciente, 
-    tba_paciente.EstadoCivil, 
-    tba_paciente.NumeroContactoPaciente, 
-    tba_paciente.NombreContactoPaciente, 
-    tba_historiaclinica.AlergiasEncontradas, 
     tba_historiaclinica.MotivoConsulta, 
-    tba_historiaclinica.DatosInformante, 
-    tba_historiaclinica.TiempoEnfermedad, 
-    tba_historiaclinica.SignosSintomas, 
-    tba_historiaclinica.RelatoCronologico, 
-    tba_historiaclinica.FuncionesBiologicas, 
-    tba_historiaclinica.AntecedentesFamiliares, 
-    tba_historiaclinica.AntecedentesPersonales, 
-    tba_historiaclinica.RutaOdontograma, 
-    tba_detallehistoriaclinica.PresionArterial, 
-    tba_detallehistoriaclinica.Pulso, 
-    tba_detallehistoriaclinica.Temperatura, 
-    tba_detallehistoriaclinica.FrecuenciaCardiaca, 
-    tba_detallehistoriaclinica.FrecuenciaRespiratoria, 
-    tba_detallehistoriaclinica.ExamenOdonto, 
-    tba_detallehistoriaclinica.DiagnosticoPresuntivo, 
-    tba_detallehistoriaclinica.DiagnosticoDefinitivo, 
-    tba_detallehistoriaclinica.Pronostico, 
-    tba_detallehistoriaclinica.TratamientoPaciente, 
-    tba_detallehistoriaclinica.InformacionAlta
+    tba_historiaclinica.CheckAlergias, 
+    tba_historiaclinica.DescripcionAlergias, 
+    tba_historiaclinica.CheckHepatitis, 
+    tba_historiaclinica.DescripcionHepatitis, 
+    tba_historiaclinica.CheckDiabetes, 
+    tba_historiaclinica.DescripcionDiabetes, 
+    tba_historiaclinica.CheckHipertension, 
+    tba_historiaclinica.DescripcionHipertension, 
+    tba_historiaclinica.CheckHemorragias, 
+    tba_historiaclinica.DescripcionHemorragias, 
+    tba_historiaclinica.CheckRenal, 
+    tba_historiaclinica.DescripcionRenal, 
+    tba_historiaclinica.CheckEndocrina, 
+    tba_historiaclinica.DescripcionEndocrina, 
+    tba_historiaclinica.CheckOtros, 
+    tba_historiaclinica.DescripcionOtros, 
+    tba_historiaclinica.CheckReaccion, 
+    tba_historiaclinica.DescripcionReaccion, 
+    tba_historiaclinica.CheckExodoncia, 
+    tba_historiaclinica.DescripcionExodoncia, 
+    tba_historiaclinica.CheckMedicamento, 
+    tba_historiaclinica.DescripcionMedicamento, 
+    tba_historiaclinica.CheckGestacion, 
+    tba_historiaclinica.DescripcionGestacion,
+    tba_historiaclinica.RutaOdontograma
   FROM
     $tabla
     INNER JOIN
     tba_historiaclinica
     ON 
       tba_paciente.IdPaciente = tba_historiaclinica.IdPaciente
-    INNER JOIN
-    tba_detallehistoriaclinica
-    ON 
-      tba_historiaclinica.IdHistoriaClinica = tba_detallehistoriaclinica.IdHistoriaClinica
   WHERE
     tba_historiaclinica.IdHistoriaClinica = $codHistoria");
     $statement -> execute();
@@ -194,7 +202,7 @@ class ModelPacientes
   //  Mostrar datos básicos del paciente para imprimir
   public static function mdlMostrarDatosImprimir($tabla, $codPaciente)
   {
-    $statement = Conexion::conn()->prepare("SELECT tba_paciente.NombrePaciente, tba_paciente.ApellidoPaciente, tba_paciente.DNIPaciente, tba_paciente.EdadPaciente, tba_paciente.SexoPaciente, tba_paciente.FechaNacimiento, tba_paciente.CelularPaciente FROM $tabla WHERE tba_paciente.IdPaciente = $codPaciente");
+    $statement = Conexion::conn()->prepare("SELECT tba_paciente.NombrePaciente, tba_paciente.ApellidoPaciente, tba_paciente.DNIPaciente, tba_paciente.EdadPaciente, tba_paciente.SexoPaciente, tba_paciente.CelularPaciente FROM $tabla WHERE tba_paciente.IdPaciente = $codPaciente");
     $statement -> execute();
     return $statement -> fetch();
   }

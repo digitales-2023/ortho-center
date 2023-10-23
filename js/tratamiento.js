@@ -121,7 +121,7 @@ $(".tablaProcedimientosEditar").on("click", ".btnAgregarProcedimiento", function
 
         '<!-- Precio del procedimiento -->'+
         '<div class="col-lg-2 precioProcedimiento">'+
-          '<input type="number" class="form-control editarPrecioTratamiento" name="editarPrecioTratamiento" min="1.00" step="0.01" value="'+precioPromedio+'" required>'+
+          '<input type="number" class="form-control editarPrecioTratamiento" name="editarPrecioTratamiento" min="0.00" step="0.01" value="'+precioPromedio+'" required>'+
         '</div>' +
 
       '</div>'
@@ -134,7 +134,6 @@ $(".tablaProcedimientosEditar").on("click", ".btnAgregarProcedimiento", function
     } 
 	});
 });
-
 
 //  FUNCIONES PARA SUMAR Y LISTAR LOS PROCEDIMIENTOS
 function listarProcedimientosTratamiento()
@@ -181,21 +180,3 @@ function sumaProcedimientosTratamiento()
 
   $("#editarTotalTratamiento").val(sumaTotalTratamiento.toFixed(2));
 }
-
-$("#btnDescargarTratamiento").on("click", function(){
-  codHistoria = $(this).attr('codHistoria');
-  codPaciente = $(this).attr('codPaciente');
-  if(codHistoria != null || codHistoria != undefined || codHistoria != '')
-  {
-    window.open("library/FPDF/printPlanTratamiento.php?&codHistoria="+codHistoria+'&codPaciente='+codPaciente, "_blank");
-  }
-  else
-  {
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: '¡No se encontró una Historia Clínica!',
-    });
-  }
-});
-

@@ -74,7 +74,46 @@ class ModelVisitas
   public static function mdlObtenerCodPago($tabla, $codVisita)
   {
     $statement = Conexion::conn()->prepare("SELECT tba_visita.IdPago FROM $tabla WHERE tba_visita.IdVisita = $codVisita");
-    $statement -> execute();
-    return $statement -> fetch();
+    $statement->execute();
+    return $statement->fetch();
+  }
+
+  //  Obtener el historial de visitas completo 
+  public static function mdlMostrarHistorialVisitas($tabla, $codHistoria)
+  {
+    $statement = Conexion::conn()->prepare("SELECT
+		tba_visita.MotivoVisita, 
+		tba_visita.FechaVisita, 
+		tba_pago.TotalPagado, 
+		tba_procedimiento.NombreProcedimiento
+	FROM
+		$tabla
+		LEFT JOIN
+		tba_pago
+		ON 
+			tba_visita.IdPago = tba_pago.IdPago
+		LEFT JOIN
+		tba_detalletratamiento
+		ON 
+			tba_visita.IdDetalleTratamiento = tba_detalletratamiento.IdDetalleTratamiento
+		LEFT JOIN
+		tba_procedimiento
+		ON 
+			tba_detalletratamiento.IdProcedimiento = tba_procedimiento.IdProcedimiento
+	WHERE
+		tba_visita.IdHistoriaClinica = $codHistoria");
+    $statement->execute();
+    return $statement->fetchAll();
+  }
+
+  //  Eliminar todas las visitas de un solo codigo de historia clinica
+  public static function mdlEliminarVisitas($tabla, $codHistoria)
+  {
+    $statement = Conexion::conn()->prepare("DELETE FROM $tabla WHERE IdHistoriaClinica = $codHistoria");
+    if ($statement->execute()) {
+      return "ok";
+    } else {
+      return "error";
+    }
   }
 }
