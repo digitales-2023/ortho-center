@@ -79,28 +79,19 @@
             <div class="card mb-4">
               <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">Análisis de Pacientes Registrados</h5>
-                <div>
-                  <select id="filtroAñoPacientes" class="form-select" style="width: 150px; display: inline-block;">
+                <div style="display: flex; gap: 10px;">
+                  <select id="filtroTipoPacientes" class="form-select" style="width: 180px;">
+                    <option value="ultimos_meses" selected>Últimos 3 Meses</option>
+                    <option value="ultimos_6_meses">Últimos 6 Meses</option>
+                    <option value="año_actual">Por Año</option>
+                  </select>
+                  <select id="filtroAñoPacientes" class="form-select" style="width: 150px; display: none;">
                     <option value="">Cargando años...</option>
                   </select>
                 </div>
               </div>
               <div class="card-body">
                 <canvas id="chartPacientesMes"></canvas>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Gráfico Acumulado -->
-        <div class="row">
-          <div class="col-lg-12">
-            <div class="card mb-4">
-              <div class="card-header">
-                <h5 class="mb-0">Pacientes Acumulados por Mes</h5>
-              </div>
-              <div class="card-body">
-                <canvas id="chartPacientesAcumulados"></canvas>
               </div>
             </div>
           </div>
@@ -116,20 +107,46 @@
 <script>
   // Variables globales para los gráficos
   let chartPacientesMes = null;
-  let chartPacientesAcumulados = null;
   const añoActual = new Date().getFullYear();
 
   $(document).ready(function() {
-    // Cargar años disponibles
+    // Cargar años disponibles y gráficos
     cargarAñosDisponibles();
     
-    // Cargar gráficos con año actual
-    cargarGraficosPacientes(añoActual);
+    // Esperar a que los años se carguen antes de mostrar gráficos de año
+    setTimeout(function() {
+      cargarGraficosPacientes("ultimos_meses", null, 3);
+    }, 500);
 
-    // Event listener para cambio de año
+    // Event listeners para cambios de filtro
+    $("#filtroTipoPacientes").on("change", function() {
+      const filtro = $(this).val();
+      if (filtro === "ultimos_meses") {
+        $("#filtroAñoPacientes").fadeOut(200);
+        cargarGraficosPacientes("ultimos_meses", null, 3);
+      } else if (filtro === "ultimos_6_meses") {
+        $("#filtroAñoPacientes").fadeOut(200);
+        cargarGraficosPacientes("ultimos_6_meses", null, 6);
+      } else if (filtro === "año_actual") {
+        $("#filtroAñoPacientes").fadeIn(200);
+        // Esperar un poco para que el select sea visible
+        setTimeout(function() {
+          const año = $("#filtroAñoPacientes").val();
+          if (año && año !== "") {
+            cargarGraficosPacientes("año_actual", parseInt(año));
+          }
+        }, 300);
+      }
+    });
+
     $("#filtroAñoPacientes").on("change", function() {
-      const año = $(this).val() || añoActual;
-      cargarGraficosPacientes(año);
+      const año = $(this).val();
+      if (año && año !== "") {
+        cargarGraficosPacientes("año_actual", parseInt(año));
+      } else {
+        // Si no hay año, cargar con el año actual
+        cargarGraficosPacientes("año_actual", añoActual);
+      }
     });
   });
 
@@ -149,37 +166,55 @@
           response.forEach(function(item) {
             selectAños.append('<option value="' + item.año + '">' + item.año + '</option>');
           });
-          // Seleccionar año actual
-          selectAños.val(añoActual);
+          // Seleccionar el primer año disponible (mayor)
+          selectAños.val(response[0].año);
         } else {
-          selectAños.append('<option value="">No hay datos</option>');
+          selectAños.append('<option value="' + añoActual + '">' + añoActual + '</option>');
+          selectAños.val(añoActual);
         }
       },
       error: function() {
-        console.error("Error cargando años");
+        let selectAños = $("#filtroAñoPacientes");
+        selectAños.empty();
+        selectAños.append('<option value="' + añoActual + '">' + añoActual + '</option>');
+        selectAños.val(añoActual);
       }
     });
   }
 
-  function cargarGraficosPacientes(año) {
+  function cargarGraficosPacientes(filtro, año = null, meses = 3) {
+    let datos_ajax = {
+      filtro: filtro
+    };
+    
+    if (filtro === "año_actual" && año) {
+      datos_ajax.año = parseInt(año);
+    } else if (filtro === "ultimos_meses") {
+      datos_ajax.meses = 3;
+    } else if (filtro === "ultimos_6_meses") {
+      datos_ajax.meses = 6;
+    }
+
+    console.log("📊 Enviando AJAX:", datos_ajax, "Tipo año:", typeof datos_ajax.año);
+
     $.ajax({
       url: "ajax/pacientes-grafico.ajax.php",
       method: "POST",
-      data: {
-        año: año
-      },
+      data: datos_ajax,
       dataType: "json",
       success: function(response) {
-        console.log("Datos recibidos:", response);
+        console.log("✓ Respuesta AJAX:", response);
+        
+        if (!response || response.total_registros === undefined) {
+          console.error("✗ Respuesta inválida");
+          return;
+        }
         
         // Actualizar gráfico de pacientes por mes
         actualizarGraficoPacientesMes(response);
-        
-        // Actualizar gráfico acumulado
-        actualizarGraficoAcumulado(response);
       },
-      error: function(jqXHR, textStatus, errorThrown) {
-        console.error("Error en AJAX:", textStatus, errorThrown);
+      error: function(err) {
+        console.error("✗ Error AJAX:", err);
       }
     });
   }
@@ -196,7 +231,7 @@
       data: {
         labels: data.meses,
         datasets: [{
-          label: 'Pacientes Nuevos por Mes',
+          label: 'Pacientes Nuevos',
           data: data.datos,
           borderColor: '#0d6efd',
           backgroundColor: 'rgba(13, 110, 253, 0.1)',
@@ -252,81 +287,8 @@
     });
   }
 
-  function actualizarGraficoAcumulado(data) {
-    // Calcular datos acumulados
-    let acumulado = [];
-    let suma = 0;
-    data.datos.forEach(function(valor) {
-      suma += valor;
-      acumulado.push(suma);
-    });
 
-    const ctx = document.getElementById('chartPacientesAcumulados').getContext('2d');
-    
-    if (chartPacientesAcumulados) {
-      chartPacientesAcumulados.destroy();
-    }
 
-    chartPacientesAcumulados = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: data.meses,
-        datasets: [{
-          label: 'Pacientes Acumulados',
-          data: acumulado,
-          borderColor: '#198754',
-          backgroundColor: 'rgba(25, 135, 84, 0.1)',
-          borderWidth: 3,
-          fill: true,
-          tension: 0.4,
-          pointRadius: 5,
-          pointBackgroundColor: '#198754',
-          pointBorderColor: '#fff',
-          pointBorderWidth: 2,
-          pointHoverRadius: 7
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: true,
-        plugins: {
-          legend: {
-            display: true,
-            labels: {
-              usePointStyle: true,
-              padding: 15,
-              font: {
-                size: 12
-              }
-            }
-          },
-          tooltip: {
-            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-            padding: 12,
-            titleFont: { size: 13 },
-            bodyFont: { size: 12 },
-            callbacks: {
-              label: function(context) {
-                return 'Total Acumulado: ' + context.parsed.y;
-              }
-            }
-          }
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: {
-              stepSize: 1
-            },
-            title: {
-              display: true,
-              text: 'Total Acumulado de Pacientes'
-            }
-          }
-        }
-      }
-    });
-  }
 </script>
       </div>
     </main>

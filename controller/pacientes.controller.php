@@ -349,4 +349,12 @@ class ControllerPacientes
     $datos = ModelPacientes::mdlObtenerPacientesAcumuladosPorMes($tabla, $año);
     return $datos;
   }
+
+  // Obtener pacientes de los últimos N meses
+  public static function ctrObtenerPacientesUltimosMeses($meses = 3)
+  {
+    $tabla = "tba_paciente";
+    $datos = ModelPacientes::mdlObtenerPacientesUltimosMeses($tabla, $meses);
+    return $datos;
+  }
 }
