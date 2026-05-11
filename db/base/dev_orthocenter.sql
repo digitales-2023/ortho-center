@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: db
--- Tiempo de generación: 11-05-2026 a las 15:27:37
+-- Tiempo de generación: 11-05-2026 a las 17:57:05
 -- Versión del servidor: 9.0.1
 -- Versión de PHP: 8.3.26
 
@@ -512,16 +512,16 @@ CREATE TABLE `tba_paciente` (
 --
 
 INSERT INTO `tba_paciente` (`IdPaciente`, `NombrePaciente`, `ApellidoPaciente`, `TipoIdentificacion`, `NumeroIdentificacion`, `SexoPaciente`, `EdadPaciente`, `FechaNacimiento`, `CelularPaciente`, `DomicilioPaciente`, `LugarProcedencia`, `LugarNacimiento`, `GradoInstruccion`, `RazaPaciente`, `OcupacionPaciente`, `ReligionPaciente`, `EstadoCivil`, `NumeroContactoPaciente`, `NombreContactoPaciente`, `UsuarioCreado`, `UsuarioActualiza`, `FechaCreacion`, `FechaActualizacion`) VALUES
-(1, 'Juan', 'Perez', 'DNI', '12345678', 'Masculino', '35', '1988-11-15', '987654321', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-07 14:55:16', '2026-05-07 14:55:16'),
-(2, 'Maria', 'Garcia', 'DNI', '23456789', 'Femenino', '28', '1995-03-22', '987654322', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-07 14:55:16', '2026-05-07 14:55:16'),
-(3, 'Carlos', 'Lopez', 'DNI', '34567890', 'Masculino', '45', '1978-07-10', '987654323', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-07 14:55:16', '2026-05-07 14:55:16'),
-(4, 'Ana', 'Martinez', 'DNI', '45678901', 'Femenino', '32', '1991-09-05', '987654324', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-07 14:55:16', '2026-05-07 14:55:16'),
-(5, 'Roberto', 'Sanchez', 'DNI', '56789012', 'Masculino', '52', '1971-12-20', '987654325', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-07 14:55:16', '2026-05-07 14:55:16'),
-(6, 'Lucia', 'Ramirez', 'DNI', '67890123', 'Femenino', '38', '1985-05-14', '987654326', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-07 14:55:16', '2026-05-07 14:55:16'),
-(7, 'Fernando', 'Torres', 'DNI', '78901234', 'Masculino', '41', '1982-01-30', '987654327', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-07 14:55:16', '2026-05-07 14:55:16'),
-(8, 'Patricia', 'Flores', 'DNI', '89012345', 'Femenino', '29', '1994-08-18', '987654328', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-07 14:55:16', '2026-05-07 14:55:16'),
-(9, 'Miguel', 'Vargas', 'DNI', '90123456', 'Masculino', '55', '1968-06-25', '987654329', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-07 14:55:16', '2026-05-07 14:55:16'),
-(10, 'Sofia', 'Quispe', 'DNI', '01234567', 'Femenino', '26', '1997-02-11', '987654330', '', '', '', '', '', '', '', '', '', '', NULL, NULL, '2026-05-07 14:55:16', '2026-05-09 17:35:55');
+(1, 'Juan', 'Perez', 'DNI', '12345678', 'Masculino', '35', '1988-11-15', '987654321', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-11-10 09:15:00', '2026-01-01 00:00:00'),
+(2, 'Maria', 'Garcia', 'DNI', '23456789', 'Femenino', '28', '1995-03-22', '987654322', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-12-12 10:20:00', '2026-01-02 00:00:00'),
+(3, 'Carlos', 'Lopez', 'DNI', '34567890', 'Masculino', '45', '1978-07-10', '987654323', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-01-08 11:00:00', '2026-01-03 00:00:00'),
+(4, 'Ana', 'Martinez', 'DNI', '45678901', 'Femenino', '32', '1991-09-05', '987654324', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-02-14 12:10:00', '2026-02-01 00:00:00'),
+(5, 'Roberto', 'Sanchez', 'DNI', '56789012', 'Masculino', '52', '1971-12-20', '987654325', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-03-05 08:40:00', '2026-02-02 00:00:00'),
+(6, 'Lucia', 'Ramirez', 'DNI', '67890123', 'Femenino', '38', '1985-05-14', '987654326', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-03-21 15:25:00', '2026-02-03 00:00:00'),
+(7, 'Fernando', 'Torres', 'DNI', '78901234', 'Masculino', '41', '1982-01-30', '987654327', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-04-09 09:50:00', '2026-03-01 00:00:00'),
+(8, 'Patricia', 'Flores', 'DNI', '89012345', 'Femenino', '29', '1994-08-18', '987654328', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-04-24 16:35:00', '2026-03-02 00:00:00'),
+(9, 'Miguel', 'Vargas', 'DNI', '90123456', 'Masculino', '55', '1968-06-25', '987654329', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-03 10:05:00', '2026-03-03 00:00:00'),
+(10, 'Sofia', 'Quispe', 'DNI', '01234567', 'Femenino', '26', '1997-02-11', '987654330', '', '', '', '', '', '', '', '', '', '', NULL, NULL, '2026-05-18 14:45:00', '2026-04-01 00:00:00');
 
 -- --------------------------------------------------------
 
