@@ -269,3 +269,36 @@ $(".table").on("click", ".btnImprimirCotizacion", function () {
 $(".cerrarCotizacion").on("click", function () {
   window.location = "index.php?ruta=cotizaciones";
 });
+
+// Manejadores ARIA para el modal de procedimientos
+const modalAgregarProcedimiento = document.getElementById('modalAgregarProcedimiento');
+
+if (modalAgregarProcedimiento) {
+  // Cuando el modal está a punto de mostrarse
+  modalAgregarProcedimiento.addEventListener('show.bs.modal', function() {
+    this.setAttribute('aria-hidden', 'false');
+  });
+
+  // Cuando el modal se oculta
+  modalAgregarProcedimiento.addEventListener('hide.bs.modal', function() {
+    this.setAttribute('aria-hidden', 'true');
+  });
+
+  // Cuando el modal está completamente mostrado
+  modalAgregarProcedimiento.addEventListener('shown.bs.modal', function() {
+    // Retorna el focus al botón que abrió el modal para evitar problemas
+    const activeElement = document.activeElement;
+    if (activeElement && activeElement.getAttribute('aria-hidden') === 'true') {
+      // Si el elemento activo está oculto, enfócalo de nuevo después del modal
+      setTimeout(() => {
+        const modalDialog = this.querySelector('.modal-dialog');
+        if (modalDialog) {
+          const firstFocusable = modalDialog.querySelector('button, [href], input, select, textarea, [tabindex]');
+          if (firstFocusable) {
+            firstFocusable.focus();
+          }
+        }
+      }, 0);
+    }
+  });
+}
