@@ -129,7 +129,7 @@ $crearCotizacion = new ControllerCotizaciones;
 $crearCotizacion->ctrCrearCotizacion();
 ?>
 
-<div class="modal fade" id="modalAgregarProcedimiento" tabindex="-1" aria-labelledby="modalAgregarProcedimientoLabel" aria-hidden="true">
+<div class="modal fade" id="modalAgregarProcedimiento" tabindex="-1" aria-labelledby="modalAgregarProcedimientoLabel" inert>
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
