@@ -15,10 +15,10 @@ class Conexion
   {
     // --- LOCAL (Docker LAMP) ---
     // El servicio de MySQL se llama 'db' según docker-compose.yml
-    $link = new PDO("mysql:host=db;dbname=dev_orthocenter", "root", "test");
+   /*  $link = new PDO("mysql:host=db;dbname=dev_orthocenter", "root", "test"); */
 
     // --- PRODUCCIÓN (hostinger) ---
-    // $link = new PDO("mysql:host=localhost;dbname=u553466910_db_dentavitali", "u553466910_admin_denta", "TestingAcide*2023");
+        $link = new PDO("mysql:host=localhost;dbname=pruebasbetaacide_dev_orthocenter", "pruebasbetaacide_admin_ortho", "Acide*2026");
 
     $link->exec("set names utf8");
     return $link;
