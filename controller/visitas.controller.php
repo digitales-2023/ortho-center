@@ -1,8 +1,15 @@
 <?php
 date_default_timezone_set('America/Lima');
+
+/**
+ * ControllerVisitas — Fusionado ortho-center (A) + dentavitalis (B)
+ *
+ * Mezcla la lógica robusta de A (creación/eliminación automática de Pagos vinculados)
+ * con los nuevos campos introducidos en B (ObservacionVisita).
+ */
 class ControllerVisitas
 {
-  //  Listar visitas
+  // Mostrar visitas del paciente
   public static function ctrMostrarVisitasPaciente($codHistoria)
   {
     $tabla = "tba_visita";
@@ -10,7 +17,7 @@ class ControllerVisitas
     return $listaVisitas;
   }
 
-  //  Guardar los datos de las visitas
+  // Guardar arreglos dinámicos de visitas desde la historia clínica
   public static function ctrEditarVisitas()
   {
     if (isset($_POST["codHistoria"]) && isset($_POST["codPaciente"])) {
@@ -19,71 +26,55 @@ class ControllerVisitas
 
       $listaVisitas = json_decode($_POST["listarNuevaListaVisitas"], true);
       foreach ($listaVisitas as $value) {
-        //  Si el pago que se registra es nulo o vacío, no se crea un pago por ningún concepto, caso contrario, se tiene que crear primera el pago y luego crear la visita con el codigo de pago
-        if ($value["pagoVisita"] != "" || $value["pagoVisita"] != null) {
+
+        // LÓGICA A: Si se ingresó un pago, registrarlo primero para vincularlo a la visita
+        if (isset($value["pagoVisita"]) && $value["pagoVisita"] != "" && $value["pagoVisita"] != null) {
           $datosPago = array(
-            "IdPaciente" => $codPaciente,
+            "IdPaciente"        => $codPaciente,
             "IdHistoriaClinica" => $codHistoria,
-            "TotalPagado" => $value["pagoVisita"],
-            "FechaPago" => $value["fechaVisita"],
-            "ObservacionPago" => "Pago registrado en visita de la fecha: " . $value["fechaVisita"],
-            "FechaCreacion" => date("Y-m-d") . ' ' . date('H:i:s'),
-            "FechaActualizacion" => date("Y-m-d") . ' ' . date('H:i:s'),
+            "TotalPagado"       => $value["pagoVisita"],
+            "FechaPago"         => $value["fechaVisita"],
+            "ObservacionPago"   => "Pago registrado en visita de la fecha: " . $value["fechaVisita"],
+            "FechaCreacion"     => date("Y-m-d\TH:i:sP"),
+            "FechaActualizacion"=> date("Y-m-d\TH:i:sP"),
           );
           ControllerPagos::ctrCrearPagoVisita($datosPago);
+          
           $totalPagadoActual = ControllerTratamiento::ctrObtenerTotalPagado($codPaciente);
           $nuevoTotal = $value["pagoVisita"] + $totalPagadoActual["TotalPagado"];
           ControllerTratamiento::ctrActualizarTotal($nuevoTotal, $codPaciente);
+          
           $ultimoPago = ControllerPagos::ctrObtenerUltimoPagoRealizado();
           $codPago = $ultimoPago["Id"];
         } else {
           $codPago = "";
         }
+
+        // LÓGICA A+B: Unificar IdPago de A con ObservacionVisita de B
         $datosVisita = array(
-          "IdHistoriaClinica" => $codHistoria,
-          "IdPago" => $codPago,
+          "IdHistoriaClinica"    => $codHistoria,
+          "IdPago"               => $codPago,                                 // De A
           "IdDetalleTratamiento" => $value["referenciaVisita"],
-          "MotivoVisita" => $value["motivoVisita"],
-          "FechaVisita" => $value["fechaVisita"],
-          "UsuarioCreado" => $_SESSION["idUsuario"],
-          "UsuarioActualiza" => $_SESSION["idUsuario"],
-          "FechaCreacion" => date("Y-m-d") . ' ' . date('H:i:s'),
-          "FechaActualizacion" => date("Y-m-d") . ' ' . date('H:i:s')
+          "MotivoVisita"         => $value["motivoVisita"],
+          "FechaVisita"          => $value["fechaVisita"],
+          "ObservacionVisita"    => $value["observacionVisita"] ?? "",        // De B
+          "UsuarioCreado"        => $_SESSION["idUsuario"],
+          "UsuarioActualiza"     => $_SESSION["idUsuario"],
+          "FechaCreacion"        => date("Y-m-d\TH:i:sP"),
+          "FechaActualizacion"   => date("Y-m-d\TH:i:sP")
         );
         $respuestaIngresar = self::ctrIngresarVisitas($datosVisita);
       }
+
       if ($respuestaIngresar == "ok") {
-        echo '
-            <script>
-              Swal.fire({
-                icon: "success",
-                title: "Correcto",
-                text: "Visitas Guardadas Correctamente!",
-              }).then(function(result){
-                if(result.value){
-                  window.location = "historiaClinica";
-                }
-              });
-            </script>';
+        echo '<script>Swal.fire({ icon: "success", title: "Correcto", text: "Visitas Guardadas Correctamente!" }).then(function(result){ if(result.value){ window.location = "historiaClinica"; } });</script>';
       } else {
-        echo '
-            <script>
-              Swal.fire({
-                icon: "error",
-                title: "Error",
-                text: "¡Error al Guardar los Cambios!",
-              }).then(function(result){
-                if(result.value){
-                  window.location = "historiaClinica";
-                }
-              });
-            </script>';
+        echo '<script>Swal.fire({ icon: "error", title: "Error", text: "¡Error al Guardar los Cambios!" }).then(function(result){ if(result.value){ window.location = "historiaClinica"; } });</script>';
       }
     }
   }
 
-
-  //  Ingresar las nuevas visitas
+  // Ingresar nuevas visitas (interno)
   public static function ctrIngresarVisitas($datosCreate)
   {
     $tabla = "tba_visita";
@@ -91,12 +82,14 @@ class ControllerVisitas
     return $respuesta;
   }
 
-  //  Eliminar una visita por codVisita
+  // LÓGICA A: Eliminar la visita, borrando su pago en cascada si existe
   public static function ctrEliminarUnaVisita($codVisita)
   {
     $tabla = "tba_visita";
     $codPago = self::ctrObtenerCodPago($codVisita);
-    if ($codPago["IdPago"] != "" || $codPago["IdPago"] != null) {
+    
+    // Si la visita tenía pago vinculado, eliminarlo
+    if ($codPago && ($codPago["IdPago"] != "" && $codPago["IdPago"] != null)) {
       $respuestaPago = ControllerPagos::ctrEliminarPagoVisita($codPago["IdPago"]);
       if ($respuestaPago == "ok") {
         $respuesta = ModelVisitas::mdlEliminarUnaVisita($tabla, $codVisita);
@@ -109,7 +102,7 @@ class ControllerVisitas
     return $respuesta;
   }
 
-  //  Obtener el codigo de pago a partir del codigo de la visita
+  // LÓGICA A: Obtener el IdPago asociado a esta visita
   public static function ctrObtenerCodPago($codVisita)
   {
     $tabla = "tba_visita";
@@ -117,7 +110,7 @@ class ControllerVisitas
     return $respuesta;
   }
 
-  //  Mostrar el historial de visitas por el codigo de historia clínica
+  // LÓGICA A: Mostrar historial completo (usado en reportes)
   public static function ctrMostrarHistorialVisitas($codHistoria)
   {
     $tabla = "tba_visita";
@@ -125,7 +118,7 @@ class ControllerVisitas
     return $listaVisitas;
   }
 
-  //  Eliminar las visitas que tengan el codigo de la historia clínica
+  // LÓGICA A: Eliminar en cascada todas las visitas de una historia 
   public static function ctrEliminarVisitas($codHistoria)
   {
     $tabla = "tba_visita";

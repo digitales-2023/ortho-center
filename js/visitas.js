@@ -7,7 +7,7 @@ $(".formularioAgregarVisita").on("change", ".referenciaVisitaForm", function () 
     var datos = new FormData();
     datos.append("referenciaVisita", referenciaVisita);
     $.ajax({
-      url: "ajax/visita.ajax.php",
+      url: "ajax/visitas.ajax.php",
       method: "POST",
       data: datos,
       cache: false,
@@ -74,7 +74,7 @@ $(".nuevaVisitaAgregar").on("click", "button.eliminarVisita", function () {
         var datos = new FormData();
         datos.append("codVisitaEliminar", codVisita);
         $.ajax({
-          url: "ajax/visita.ajax.php",
+          url: "ajax/visitas.ajax.php",
           method: "POST",
           data: datos,
           cache: false,

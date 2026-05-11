@@ -170,7 +170,7 @@ $(".table").on("click", ".btnEditarPago", function () {
     processData: false,
     dataType: "json",
     success: function (respuesta) {
-      dniPaciente = respuesta["DNIPaciente"];
+      dniPaciente = respuesta["NumeroIdentificacion"];
       nombrePaciente = respuesta["NombrePaciente"]+' '+respuesta["ApellidoPaciente"];
       totalPago = respuesta["TotalPago"];
       fechaPago = respuesta["FechaPago"];
@@ -247,9 +247,10 @@ $(".formularioEditarPago").on("click", ".btnBuscarPorDNI", function () {
 //  Redirigir la vista para visualizar los pagos actuales
 $(".table").on("click", ".btnVisualizarPagos", function () {
   var codPaciente = $(this).attr("codPaciente");
+  var codHistoria = $(this).attr("codHistoria");
   if(codPaciente!=null && codPaciente!=null)
   {
-    window.location = "index.php?ruta=visualizarPagos&codPaciente="+codPaciente;
+    window.location = "index.php?ruta=visualizarPagos&codPaciente="+codPaciente+"&codHistoria="+codHistoria;
   }
 });
 
@@ -259,7 +260,7 @@ $(".cerrarVisualizar").on("click", function(){
 });
 
 //  Descargar la historia clínica completa con el detalle de los procedimientos más
-$(".table").on("click", ".btnImprimirFicha", function () {
+$(".table").on("click", ".btnFichaPagos", function () {
   codPaciente = $(this).attr('codPaciente');
   if(codPaciente != null || codPaciente != undefined || codPaciente != '')
   {
@@ -347,4 +348,14 @@ $(".nuevoProcedimientoAgregar").on("click", ".btnDescargarPago", function () {
 //  Descargar todos los pagos realizados
 $("#descargarPagos").on("click", function(){
   window.location = "view/modules/descargar-reporte.php?&descargarPagos";
+});
+
+//  Descargar todos los pagos realizados
+$("#descargarPagosPendientes").on("click", function(){
+  window.location = "view/modules/descargar-reporte.php?&descargarPagosPendientes";
+});
+
+//  Descargar todos los pagos realizados
+$("#descargarAtencionesMedicos").on("click", function(){
+  window.location = "view/modules/descargar-reporte.php?&descargarAtencionesMedicos";
 });

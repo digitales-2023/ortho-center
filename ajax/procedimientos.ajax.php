@@ -2,6 +2,8 @@
 
 require_once "../controller/procedimientos.controller.php";
 require_once "../model/procedimientos.model.php";
+require_once "../controller/socios.controller.php";
+require_once "../model/socios.model.php";
 
 class AjaxProcedimientos
 {

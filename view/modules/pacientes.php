@@ -1,65 +1,66 @@
 </div>
+</div>
+<div class="sb-sidenav-footer">
+  <div class="small">Sesión iniciada como:</div>
+  <?php echo $_SESSION["nombreUsuario"] ?>
+</div>
+</nav>
+</div>
+<div id="layoutSidenav_content">
+  <main class="bg">
+    <div class="container-fluid px-4">
+      <h1 class="mt-4">Todos los pacientes</h1>
+
+      <div class="d-flex m-2">
+        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalAgregarPaciente">
+          Agregar Paciente
+        </button>
+      </div>
+      <div class="card mb-4">
+        <div class="card-header">
+          <i class="fas fa-table me-1"></i>
+          Todos los Pacientes
         </div>
-        <div class="sb-sidenav-footer">
-          <div class="small">Sesión iniciada como:</div>
-          <?php echo $_SESSION["nombreUsuario"] ?>
+        <div class="card-body">
+          <table id="datatablesSimple" class="data-table-Paciente table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Tipo Identificación</th>
+                <th>Número Identificación</th>
+                <th>Celular</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php
+              $listaPacientes = ControllerPacientes::ctrMostrarPacientes();
+              foreach ($listaPacientes as $key => $value) {
+                echo
+                '<tr>
+                    <td>' . ($key + 1) . '</td>
+                    <td>' . $value["NombrePaciente"] . '</td>
+                    <td>' . $value["ApellidoPaciente"] . '</td>
+                    <td>' . $value["TipoIdentificacion"] . '</td>
+                    <td>' . $value["NumeroIdentificacion"] . '</td>
+                    <td>' . $value["CelularPaciente"] . '</td>
+                    <td>
+                      <button class="btn btn-warning btnEditarPaciente" codPaciente="' . $value["IdPaciente"] . '" data-bs-toggle="modal" data-bs-target="#modalEditarpaciente">Editar <i class="fa-solid fa-pencil"></i></button>
+                      <button class="btn btn-danger btnEliminarPaciente" codPaciente="' . $value["IdPaciente"] . '">Eliminar <i class="fa-solid fa-trash"></i></button>
+                    </td>
+                  </tr>';
+              }
+              ?>
+            </tbody>
+          </table>
         </div>
-      </nav>
+      </div>
     </div>
-    <div id="layoutSidenav_content">
-      <main class="bg">
-        <div class="container-fluid px-4">
-          <h1 class="mt-4">Todos los pacientes</h1>
-          
-          <div class="d-flex m-2">
-            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalAgregarPaciente">
-              Agregar Paciente
-            </button>
-          </div>
-          <div class="card mb-4">
-            <div class="card-header">
-              <i class="fas fa-table me-1"></i>
-              Todos los Pacientes
-            </div>
-            <div class="card-body">
-              <table id="datatablesSimple" class="data-table-Paciente table">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>DNI</th>
-                    <th>Celular</th>
-                    <th>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <?php
-                  $listaPacientes = ControllerPacientes::ctrMostrarPacientes();
-                  foreach ($listaPacientes as $key => $value) 
-                  {
-                    echo
-                    '<tr>
-                      <td>'.($key + 1).'</td>
-                      <td>'.$value["NombrePaciente"].'</td>
-                      <td>'.$value["ApellidoPaciente"].'</td>
-                      <td>'.$value["DNIPaciente"].'</td>
-                      <td>'.$value["CelularPaciente"].'</td>
-                      <td>
-                        <button class="btn btn-warning btnEditarPaciente" codPaciente="'.$value["IdPaciente"].'" data-bs-toggle="modal" data-bs-target="#modalEditarpaciente">Editar <i class="fa-solid fa-pencil"></i></button>
-                        <button class="btn btn-danger btnEliminarPaciente" codPaciente="'.$value["IdPaciente"].'">Eliminar <i class="fa-solid fa-trash"></i></button>
-                      </td>
-                    </tr>';
-                  }
-                  ?>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </main>
-    </div>
-  </div>
+  </main>
+</div>
+</div>
 
 <!-- Modal Agregar un nuevo Paciente -->
 <div class="modal fade" id="modalAgregarPaciente" tabindex="-1" role="dialog" aria-labelledby="modalAgregarPaciente" aria-hidden="true">
@@ -88,8 +89,18 @@
 
           <!-- Celular del Paciente -->
           <div class="form-group">
-            <label for="celularPaciente" class="col-form-label">Numero de celular:</label>
+            <label for="celularPaciente" class="col-form-label">Número de celular:</label>
             <input type="text" class="form-control" id="celularPaciente" name="celularPaciente">
+          </div>
+
+          <!-- Tipo de Identificación -->
+          <div class="form-group">
+            <label for="tipoIdentificacion" class="col-form-label">Tipo de Documento</label>
+            <select class="form-control" name="tipoIdentificacion">
+              <option value="DNI">DNI</option>
+              <option value="CE">CARNET EXTRANJERÍA</option>
+              <option value="PASS">PASAPORTE</option>
+            </select>
           </div>
 
           <!-- DNI Paciente -->
@@ -103,8 +114,8 @@
             <button type="submit" class="btn btn-primary">Crear Paciente</button>
           </div>
           <?php
-            $crearPaciente = new ControllerPacientes();
-            $crearPaciente -> ctrCrearPaciente();
+          $crearPaciente = new ControllerPacientes();
+          $crearPaciente->ctrCrearPaciente();
           ?>
         </form>
       </div>
@@ -123,7 +134,7 @@
       <form role="form" method="post">
         <div class="modal-body">
           <div class="box-body">
-            
+
             <!-- Nombre del Paciente -->
             <div class="form-group">
               <label for="editarNombrePaciente" class="col-form-label">Nombre Socio:</label>
@@ -134,6 +145,16 @@
             <div class="form-group">
               <label for="editarApellidoPaciente" class="col-form-label">Nombre Socio:</label>
               <input type="text" class="form-control" id="editarApellidoPaciente" name="editarApellidoPaciente">
+            </div>
+
+            <!-- Tipo de Identificación -->
+            <div class="form-group">
+              <label for="editarTipoIdentificacion" class="col-form-label">Tipo de Documento</label>
+              <select class="form-control" name="editarTipoIdentificacion" id="editarTipoIdentificacion">
+                <option value="DNI">DNI</option>
+                <option value="CE">CARNET EXTRANJERÍA</option>
+                <option value="PASAPORTE">PASAPORTE</option>
+              </select>
             </div>
 
             <!-- DNI del Paciente -->
@@ -154,8 +175,8 @@
               <button type="submit" class="btn btn-primary">Editar Paciente</button>
             </div>
             <?php
-              $editarPaciente = new ControllerPacientes();
-              $editarPaciente -> ctrEditarPaciente();
+            $editarPaciente = new ControllerPacientes();
+            $editarPaciente->ctrEditarPaciente();
             ?>
           </div>
         </div>
@@ -165,6 +186,6 @@
 </div>
 
 <?php
-  $eliminarSocio = new ControllerPacientes();
-  $eliminarSocio -> ctrEliminarPaciente();
+$eliminarSocio = new ControllerPacientes();
+$eliminarSocio->ctrEliminarPaciente();
 ?>

@@ -13,7 +13,7 @@ $desc=array (
 );
 $up=-63;
 $ut=44;
-$ttffile='C:\xampp\htdocs\ortho-center\library\FPDF/font/unifont/DejaVuSansCondensed.ttf';
+$ttffile=__DIR__.'/DejaVuSansCondensed.ttf';
 $originalsize=680264;
 $fontkey='dejavu';
 ?>

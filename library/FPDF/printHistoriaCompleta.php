@@ -1,364 +1,275 @@
 <?php
-//  Controladores
+header('Content-Type: application/pdf; charset=UTF-8');
+mb_internal_encoding('UTF-8');
+
 require_once('../../controller/pacientes.controller.php');
 require_once('../../controller/tratamiento.controller.php');
-require_once('../../controller/visitas.controller.php');
-
-//  Modelos
 require_once('../../model/pacientes.model.php');
 require_once('../../model/tratamiento.model.php');
-require_once('../../model/visitas.model.php');
-
 require('tfpdf.php');
 
-//  Historia en PDF
-class PDFHistoriaClinica extends TFPDF
+class PDFHistoriaClinicaPro extends TFPDF
 {
-  // Cabecera de página
-  function Header()
-  {
-    // Logo
-    $this->Image('../../view/img/logo-ortho-blanco.png', 155, 8, 33);
-    // Arial bold 15
-    $this->AddFont('DejaVu', '', 'DejaVuSansCondensed.ttf', true);
+    private $colorPrimario = array(0, 102, 204);
+    private $colorSecundario = array(240, 245, 250);
+    private $colorTexto = array(50, 50, 50);
+    private $colorBorde = array(200, 200, 200);
 
-    // Título
-    $this->Ln(15);
-    $this->Cell(80);
-    $this->SetFont('Arial', 'B', 15);
-    $this->Cell(30, 10, utf8_decode('HISTORIA CLINICA ODONTOLÓGICA'), 0, 0, 'C');
-
-
-    // Salto de línea
-    $this->Ln(15);
-  }
-
-  // Pie de página
-  function Footer()
-  {
-    // Posición: a 1,5 cm del final
-    $this->SetY(-15);
-    // Arial italic 8
-    $this->AddFont('DejaVu', '', 'DejaVuSansCondensed.ttf', true);
-    $this->SetFont('DejaVu', '', 8);
-    // Número de página
-    $this->Cell(0, 8, 'Página ' . $this->PageNo() . '/{nb}', 0, 0, 'L');
-    $this->Cell(0, 8, 'Colegio Odontológico del Perú', 0, 0, 'R');
-  }
-
-  //  Imprimir plan de tratamiento
-  function TablaProcedimientos($header, $listaTratamiento)
-  {
-    $this->SetFont('Arial', 'B', 10);
-    $this->Cell(70, 7, $header[0], 1, 0, 'C');
-    $this->Cell(60, 7, $header[1], 1, 0, 'C');
-    $this->Cell(25, 7, $header[2], 1, 0, 'C');
-    $this->Cell(25, 7, $header[3], 1, 0, 'C');
-
-    foreach ($listaTratamiento as $dato) {
-      $this->SetFont('DejaVu', '', 10);
-      if ($dato["EstadoTratamiento"] != '1') {
-        $estado = "Realizado";
-      } else {
-        $estado = "No Realizado";
-      }
-
-      if ($dato["FechaProcedimiento"] == '0000-00-00') {
-        $fecha = "Sin Asignar";
-      } else {
-        $fecha = $dato["FechaProcedimiento"];
-      }
-      $this->Ln();
-      $this->Cell(70, 5, $dato["NombreProcedimiento"], 1);
-      $this->Cell(60, 5, $dato["ObservacionProcedimiento"], 1);
-      $this->Cell(25, 5, $estado, 1);
-      $this->Cell(25, 5, $fecha, 1);
+    function Header()
+    {
+        // Fondo con logo blanco
+        $this->SetFillColor(255, 255, 255);
+        $this->Rect(155, 8, 40, 18, 'F');
+        
+        $this->Image('../../view/img/logo-ortho-blanco.png', 157, 9, 36);
+        
+        // Titulo principal
+        $this->SetFont('DejaVu', 'B', 13);
+        $this->SetTextColor($this->colorPrimario[0], $this->colorPrimario[1], $this->colorPrimario[2]);
+        $this->Cell(150, 10, 'HISTORIA CLINICA ODONTOLOGICA', 0, 1, 'L');
+        
+        // Subtitulos compactos
+        $this->SetFont('DejaVu', 'B', 8);
+        $this->SetTextColor(100, 100, 100);
+        $this->Cell(150, 4, 'Orthocenter - Static Dental', 0, 1, 'L');
+        
+        $this->SetFont('DejaVu', '', 7);
+        $this->Cell(150, 3, 'Colegio Odontologico del Peru', 0, 1, 'L');
+        
+        // Linea separadora
+        $this->SetDrawColor($this->colorPrimario[0], $this->colorPrimario[1], $this->colorPrimario[2]);
+        $this->SetLineWidth(0.5);
+        $this->Line(10, 33, 200, 33);
+        $this->Ln(3);
     }
-  }
 
-  //  Imprimir el historial de visitas
-  function TablaVisitas($header, $historialVisitas)
-  {
-    $this->SetFont('Arial', 'B', 10);
-    $this->Cell(70, 7, $header[0], 1, 0, 'C');
-    $this->Cell(25, 7, $header[1], 1, 0, 'C');
-    $this->Cell(65, 7, $header[2], 1, 0, 'C');
-    $this->Cell(20, 7, $header[3], 1, 0, 'C');
-
-    foreach ($historialVisitas as $dato) {
-      $this->SetFont('DejaVu', '', 10);
-
-      $this->Ln();
-      $this->Cell(70, 5, $dato["MotivoVisita"], 1);
-      $this->Cell(25, 5, $dato["FechaVisita"], 1);
-      $this->Cell(65, 5, $dato["NombreProcedimiento"], 1);
-      $this->Cell(20, 5,  $dato["TotalPagado"], 1);
+    function Footer()
+    {
+        $this->SetY(-12);
+        $this->SetFont('DejaVu', '', 7);
+        $this->SetTextColor(150, 150, 150);
+        $this->Cell(0, 3, 'Pagina ' . $this->PageNo() . '/{nb}', 0, 0, 'C');
+        $this->SetY(-8);
+        $this->Cell(0, 3, date('d/m/Y'), 0, 0, 'R');
     }
-  }
+
+    function SectionHeader($titulo)
+    {
+        $this->SetFillColor($this->colorPrimario[0], $this->colorPrimario[1], $this->colorPrimario[2]);
+        $this->SetFont('DejaVu', 'B', 9);
+        $this->SetTextColor(255, 255, 255);
+        $this->Cell(0, 5.5, '  ' . $titulo, 0, 1, 'L', true);
+        $this->SetTextColor($this->colorTexto[0], $this->colorTexto[1], $this->colorTexto[2]);
+        $this->Ln(1);
+    }
+
+    function RowDoble($e1, $v1, $e2, $v2)
+    {
+        $this->SetFont('DejaVu', 'B', 7);
+        $this->SetTextColor(50, 50, 50);
+        $this->Cell(40, 4.5, $e1 . ':', 0, 0);
+        
+        $this->SetFont('DejaVu', '', 7);
+        $this->SetTextColor(80, 80, 80);
+        $this->Cell(50, 4.5, $v1, 0, 0);
+        
+        $this->SetFont('DejaVu', 'B', 7);
+        $this->SetTextColor(50, 50, 50);
+        $this->Cell(40, 4.5, $e2 . ':', 0, 0);
+        
+        $this->SetFont('DejaVu', '', 7);
+        $this->SetTextColor(80, 80, 80);
+        $this->Cell(0, 4.5, $v2, 0, 1);
+    }
+
+    function RowTriple($e1, $v1, $e2, $v2, $e3, $v3)
+    {
+        $this->SetFont('DejaVu', 'B', 6.5);
+        $this->SetTextColor(50, 50, 50);
+        $this->Cell(30, 3.5, $e1 . ':', 0, 0);
+        
+        $this->SetFont('DejaVu', '', 6.5);
+        $this->SetTextColor(80, 80, 80);
+        $this->Cell(30, 3.5, $v1, 0, 0);
+        
+        $this->SetFont('DejaVu', 'B', 6.5);
+        $this->SetTextColor(50, 50, 50);
+        $this->Cell(40, 3.5, $e2 . ':', 0, 0);
+        
+        $this->SetFont('DejaVu', '', 6.5);
+        $this->SetTextColor(80, 80, 80);
+        $this->Cell(40, 3.5, $v2, 0, 0);
+        
+        $this->SetFont('DejaVu', 'B', 6.5);
+        $this->SetTextColor(50, 50, 50);
+        $this->Cell(25, 3.5, $e3 . ':', 0, 0);
+        
+        $this->SetFont('DejaVu', '', 6.5);
+        $this->SetTextColor(80, 80, 80);
+        $this->Cell(0, 3.5, $v3, 0, 1);
+    }
+
+    function CampoCompacto($etiqueta, $valor)
+    {
+        $this->SetFont('DejaVu', 'B', 7);
+        $this->SetTextColor(50, 50, 50);
+        $this->Cell(40, 4, $etiqueta . ':', 0, 1);
+        
+        $this->SetFont('DejaVu', '', 7);
+        $this->SetTextColor(80, 80, 80);
+        $this->SetX(15);
+        $this->MultiCell(185, 3.5, $valor, 'B', 'L');
+        $this->Ln(1);
+    }
+
+    function TablaSignosVitales($datos)
+    {
+        $this->SetFont('DejaVu', 'B', 6);
+        $this->SetFillColor($this->colorSecundario[0], $this->colorSecundario[1], $this->colorSecundario[2]);
+        $this->SetDrawColor($this->colorBorde[0], $this->colorBorde[1], $this->colorBorde[2]);
+        
+        $this->Cell(38, 4.5, 'Presion', 1, 0, 'C', true);
+        $this->Cell(38, 4.5, 'Pulso', 1, 0, 'C', true);
+        $this->Cell(38, 4.5, 'Temp', 1, 0, 'C', true);
+        $this->Cell(38, 4.5, 'FC', 1, 0, 'C', true);
+        $this->Cell(38, 4.5, 'FR', 1, 1, 'C', true);
+        
+        $this->SetFont('DejaVu', '', 6);
+        $this->SetTextColor(100, 100, 100);
+        $this->SetDrawColor($this->colorBorde[0], $this->colorBorde[1], $this->colorBorde[2]);
+        
+        $pa = $datos['PresionArterial'] ?? 'N/A';
+        $pulso = $datos['Pulso'] ?? 'N/A';
+        $temp = $datos['Temperatura'] ?? 'N/A';
+        $fc = $datos['FrecuenciaCardiaca'] ?? 'N/A';
+        $fr = $datos['FrecuenciaRespiratoria'] ?? 'N/A';
+        
+        $this->Cell(38, 4, $pa, 1, 0, 'C');
+        $this->Cell(38, 4, $pulso, 1, 0, 'C');
+        $this->Cell(38, 4, $temp, 1, 0, 'C');
+        $this->Cell(38, 4, $fc, 1, 0, 'C');
+        $this->Cell(38, 4, $fr, 1, 1, 'C');
+        $this->Ln(1.5);
+    }
 }
 
-//  Función para devolver el checklist en si o no
-function checkList($check)
-{
-  if ($check == "on") {
-    return "Si";
-  } else {
-    return "No";
-  }
-}
-
-//  Obtener el codigo del paciente para recoger sus datos 
-$codHistoria = $_GET["codHistoria"];
-$datosHistoriaClinica = ControllerPacientes::ctrObtenerDatosHistoriaPdf($codHistoria);
+// Obtener datos
+$codHistoria = $_GET["codHistoria"] ?? 1;
+$datosHistoria = ControllerPacientes::ctrObtenerDatosHistoriaPdf($codHistoria);
 $planTratamiento = ControllerTratamiento::ctrMostrarDetalleTratamientoCompleto($codHistoria);
-$historialVisitas = ControllerVisitas::ctrMostrarHistorialVisitas($codHistoria);
 
-// Creacion de los datos de la historia clínica
-$pdf = new PDFHistoriaClinica();
-
+// Crear PDF
+$pdf = new PDFHistoriaClinicaPro();
 $pdf->AliasNbPages();
-$pdf->AddPage();
+$pdf->SetAutoPageBreak(true, 10);
 $pdf->AddFont('DejaVu', '', 'DejaVuSansCondensed.ttf', true);
+$pdf->AddFont('DejaVu', 'B', 'DejaVuSansCondensed-Bold.ttf', true);
+$pdf->AddPage();
 
-/**
- * DATOS GENERALES DEL PACIENTE
- */
-$pdf->SetFont('Arial', 'B', 14);
-$pdf->Cell(80, 10, 'Anamnesis', 0, 'L');
+// ========== DATOS GENERALES DEL PACIENTE ==========
+$pdf->SectionHeader('DATOS GENERALES DEL PACIENTE');
 
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(35, 8, 'Nombre Paciente:', 0);
-$pdf->SetFont('DejaVu', '', 10);
-$pdf->Cell(70, 8, $datosHistoriaClinica["NombrePaciente"] . ' ' . $datosHistoriaClinica["ApellidoPaciente"], 0);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(15, 8, 'Sexo:', 0);
-$pdf->SetFont('DejaVu', '', 10);
-$pdf->Cell(25, 8, $datosHistoriaClinica["SexoPaciente"], 0);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(15, 8, 'Edad:', 0);
-$pdf->SetFont('DejaVu', '', 10);
-$pdf->Cell(25, 8, $datosHistoriaClinica["EdadPaciente"], 0);
+$nombre = $datosHistoria["NombrePaciente"] . ' ' . $datosHistoria["ApellidoPaciente"];
+$sexo = $datosHistoria["SexoPaciente"] ?? 'N/A';
+$edad = $datosHistoria["EdadPaciente"] ?? 'N/A';
+$dni = $datosHistoria["NumeroIdentificacion"] ?? 'N/A';
+$fechaNac = $datosHistoria["FechaNacimiento"] ?? 'N/A';
+$ocupacion = $datosHistoria["OcupacionPaciente"] ?? 'N/A';
+$contacto = $datosHistoria["NombreContactoPaciente"] ?? 'N/A';
+$telefono = $datosHistoria["NumeroContactoPaciente"] ?? 'N/A';
 
-$pdf->Ln(8);
+$pdf->RowDoble('Nombre', $nombre, 'Sexo', $sexo);
+$pdf->RowDoble('DNI', $dni, 'Edad', $edad);
+$pdf->RowDoble('Fecha Nacimiento', $fechaNac, 'Ocupacion', $ocupacion);
+$pdf->RowDoble('Contacto', $contacto, 'Telefono', $telefono);
 
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(15, 8, 'DNI:', 0);
-$pdf->SetFont('DejaVu', '', 10);
-$pdf->Cell(25, 8, $datosHistoriaClinica["DNIPaciente"], 0);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(25, 8, 'Ocupacion:', 0);
-$pdf->SetFont('DejaVu', '', 10);
-$pdf->Cell(25, 8, $datosHistoriaClinica["OcupacionPaciente"], 0);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(40, 8, 'Lugar de Procedencia:', 0);
-$pdf->SetFont('DejaVu', '', 10);
-$pdf->Cell(30, 8, $datosHistoriaClinica["LugarProcedencia"], 0);
+$alergia = $datosHistoria["AlergiasEncontradas"] ?? 'Sin datos';
+$pdf->CampoCompacto('Riesgo Alergia', $alergia);
 
-$pdf->Ln(8);
+// ========== ENFERMEDAD ACTUAL ==========
+$pdf->SectionHeader('ENFERMEDAD ACTUAL');
 
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(30, 8, 'Domicilio Actual:', 0);
-$pdf->SetFont('DejaVu', '', 10);
-$pdf->Cell(50, 8, $datosHistoriaClinica["DomicilioPaciente"], 0);
+$informante = $datosHistoria["DatosInformante"] ?? 'Paciente';
+$motivo = $datosHistoria["MotivoConsulta"] ?? 'N/A';
+$tiempo = $datosHistoria["TiempoEnfermedad"] ?? 'N/A';
 
-$pdf->Ln(8);
+$pdf->RowDoble('Informante', $informante, 'Motivo Consulta', $motivo);
+$pdf->RowDoble('Tiempo Enfermedad', $tiempo, 'Estado', '');
 
-$pdf->Cell(190, 8, '___________________________________________________________________________________________________________________', 0);
+$sintomas = $datosHistoria["SignosSintomas"] ?? 'Sin datos';
+$relato = $datosHistoria["RelatoCronologico"] ?? 'Sin datos';
+$funciones = $datosHistoria["FuncionesBiologicas"] ?? 'Normales';
 
-/**
- * ANTECEDENTES
- */
-$pdf->Ln(8);
+$pdf->CampoCompacto('Signos y Sintomas', $sintomas);
+$pdf->CampoCompacto('Relato Cronologico', $relato);
+$pdf->CampoCompacto('Funciones Biologicas', $funciones);
 
-$pdf->SetFont('Arial', 'B', 14);
-$pdf->Cell(80, 8, utf8_decode('Antecedentes'), 0, 'L');
+// ========== ANTECEDENTES ==========
+$pdf->SectionHeader('ANTECEDENTES');
 
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(30, 8, 'Motivo de consulta:', 0);
+$antFam = $datosHistoria["AntecedentesFamiliares"] ?? 'Sin datos';
+$antPer = $datosHistoria["AntecedentesPersonales"] ?? 'Sin datos';
 
-$pdf->Ln(8);
-$pdf->SetFont('DejaVu', '', 10);
-$pdf->MultiCell(180, 8, $datosHistoriaClinica["MotivoConsulta"], 0);
+$pdf->CampoCompacto('Familiares', $antFam);
+$pdf->CampoCompacto('Personales', $antPer);
 
-$pdf->Ln(4);
+// ========== EXPLORACION FISICA ==========
+$pdf->SectionHeader('EXPLORACION FISICA');
 
-/**
- * Del estado de salud general
- */
+$pdf->SetFont('DejaVu', 'B', 7);
+$pdf->SetTextColor(50, 50, 50);
+$pdf->Cell(0, 3.5, 'Signos Vitales:', 0, 1);
+$pdf->Ln(0.8);
 
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(30, 8, 'Del estado de salud general:', 0);
+$pdf->TablaSignosVitales($datosHistoria);
 
-$pdf->Ln(8);
+$examen = $datosHistoria["ExamenOdonto"] ?? 'Normal';
+$pdf->CampoCompacto('Examen Odonto', $examen);
 
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(35, 8, 'Alergias', 0);
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(10, 8, '(' . checkList($datosHistoriaClinica["CheckAlergias"]) . ')', 0);
-$pdf->SetFont('DejaVu', '', 10);
-$pdf->Cell(150, 8, $datosHistoriaClinica["DescripcionAlergias"], 0);
+// ========== DIAGNOSTICO ==========
+$pdf->SectionHeader('DIAGNOSTICO (CIE-10)');
 
-$pdf->Ln(8);
+$diagPres = $datosHistoria["DiagnosticoPresuntivo"] ?? 'Por determinar';
+$diagDef = $datosHistoria["DiagnosticoDefinitivo"] ?? 'Por determinar';
 
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(35, 8, 'Hepatitis', 0);
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(10, 8, '(' . checkList($datosHistoriaClinica["CheckHepatitis"]) . ')', 0);
-$pdf->SetFont('DejaVu', '', 10);
-$pdf->Cell(150, 8, $datosHistoriaClinica["DescripcionHepatitis"], 0);
+$pdf->CampoCompacto('Presuntivo', $diagPres);
+$pdf->CampoCompacto('Definitivo', $diagDef);
 
-$pdf->Ln(8);
+// ========== PRONOSTICO Y TRATAMIENTO ==========
+$pdf->SectionHeader('PRONOSTICO Y TRATAMIENTO');
 
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(35, 8, 'Diabetes', 0);
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(10, 8, '(' . checkList($datosHistoriaClinica["CheckDiabetes"]) . ')', 0);
-$pdf->SetFont('DejaVu', '', 10);
-$pdf->Cell(150, 8, $datosHistoriaClinica["DescripcionDiabetes"], 0);
+$pronostico = $datosHistoria["Pronostico"] ?? 'Favorable';
+$tratamiento = $datosHistoria["TratamientoPaciente"] ?? 'Por determinar';
 
+$pdf->CampoCompacto('Pronostico', $pronostico);
+$pdf->CampoCompacto('Tratamiento', $tratamiento);
 
-$pdf->Ln(8);
-
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(35, 8, utf8_decode('Hipertensión'), 0);
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(10, 8, '(' . checkList($datosHistoriaClinica["CheckHipertension"]) . ')', 0);
-$pdf->SetFont('DejaVu', '', 10);
-$pdf->Cell(150, 8, $datosHistoriaClinica["DescripcionHipertension"], 0);
-
-
-$pdf->Ln(8);
-
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(35, 8, 'Hemorragias', 0);
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(10, 8, '(' . checkList($datosHistoriaClinica["CheckHemorragias"]) . ')', 0);
-$pdf->SetFont('DejaVu', '', 10);
-$pdf->Cell(150, 8, $datosHistoriaClinica["DescripcionHemorragias"], 0);
-
-
-$pdf->Ln(8);
-
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(35, 8, 'Enfermedad renal', 0);
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(10, 8, '(' . checkList($datosHistoriaClinica["CheckRenal"]) . ')', 0);
-$pdf->SetFont('DejaVu', '', 10);
-$pdf->Cell(150, 8, $datosHistoriaClinica["DescripcionRenal"], 0);
-
-$pdf->Ln(8);
-
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(35, 8, utf8_decode('Alteración endocrina'), 0);
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(10, 8, '(' . checkList($datosHistoriaClinica["CheckEndocrina"]) . ')', 0);
-$pdf->SetFont('DejaVu', '', 10);
-$pdf->Cell(150, 8, $datosHistoriaClinica["DescripcionEndocrina"], 0);
-
-$pdf->Ln(8);
-
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(35, 8, 'Otros', 0);
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(10, 8, '(' . checkList($datosHistoriaClinica["CheckOtros"]) . ')', 0);
-$pdf->SetFont('DejaVu', '', 10);
-$pdf->Cell(150, 8, $datosHistoriaClinica["DescripcionOtros"], 0);
-
-/**
- * Del estado de salud  estomatológico
- */
-
-$pdf->Ln(16);
-
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(30, 8, utf8_decode('Del estado de salud estomatológico:'), 0);
-
-$pdf->Ln(8);
-
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(35, 8, 'Alergias', 0);
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(10, 8, '(' . checkList($datosHistoriaClinica["CheckReaccion"]) . ')', 0);
-$pdf->SetFont('DejaVu', '', 10);
-$pdf->Cell(150, 8, $datosHistoriaClinica["DescripcionReaccion"], 0);
-
-$pdf->Ln(8);
-
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(35, 8, 'Hepatitis', 0);
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(10, 8, '(' . checkList($datosHistoriaClinica["CheckExodoncia"]) . ')', 0);
-$pdf->SetFont('DejaVu', '', 10);
-$pdf->Cell(150, 8, $datosHistoriaClinica["DescripcionExodoncia"], 0);
-
-$pdf->Ln(8);
-
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(35, 8, 'Diabetes', 0);
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(10, 8, '(' . checkList($datosHistoriaClinica["CheckMedicamento"]) . ')', 0);
-$pdf->SetFont('DejaVu', '', 10);
-$pdf->Cell(150, 8, $datosHistoriaClinica["DescripcionMedicamento"], 0);
-
-
-$pdf->Ln(8);
-
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(35, 8, utf8_decode('Hipertensión'), 0);
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(10, 8, '(' . checkList($datosHistoriaClinica["CheckGestacion"]) . ')', 0);
-$pdf->SetFont('DejaVu', '', 10);
-$pdf->Cell(150, 8, $datosHistoriaClinica["DescripcionGestacion"], 0);
-
-$pdf->Ln(8);
-
-/**
- * ODONTOGRAMA EN UNA NUEVA HOJA
- */
-if ($datosHistoriaClinica["RutaOdontograma"] != null || $datosHistoriaClinica["RutaOdontograma"] != '') {
-  $pdf->AddPage();
-  $pdf->SetFont('Arial', 'B', 14);
-  $pdf->Cell(80, 10, 'Odontograma', 0, 'L');
-
-  $pdf->Ln(8);
-  $rutaOdontograma = '../../image/odontograma/' . $datosHistoriaClinica["RutaOdontograma"];
-
-  $pdf->Image($rutaOdontograma, 30, 50, 150, 170);
+// ========== FIRMA ==========
+$yFirmaMin = 266;
+if ($pdf->GetY() < $yFirmaMin) {
+    $pdf->SetY($yFirmaMin);
+} else {
+    $pdf->Ln(2);
 }
+$pdf->SetFont('DejaVu', 'B', 7);
+$pdf->SetTextColor(50, 50, 50);
+$pdf->Cell(95, 3, 'Profesional:', 0, 0);
+$pdf->Cell(95, 3, 'Fecha:', 0, 1);
 
-/**
- * PLAN DE TRATAMIENTO DEL PACIENTE EN UNA NUEVA HOJA
- */
-$pdf->AddPage();
-$pdf->SetFont('Arial', 'B', 14);
-$pdf->Cell(80, 10, 'Lista de Procedimientos', 0, 'L');
+$pdf->Ln(6);
+$pdf->SetDrawColor(100, 100, 100);
+$pdf->SetLineWidth(0.3);
+$pdf->Line(15, $pdf->GetY(), 100, $pdf->GetY());
+$pdf->SetX(110);
+$pdf->Line(110, $pdf->GetY(), 195, $pdf->GetY());
 
-$pdf->Ln(8);
+$pdf->Ln(2);
+$pdf->SetFont('DejaVu', '', 6);
+$pdf->SetTextColor(150, 150, 150);
+$pdf->Cell(85, 3, 'Nombre y Firma', 0, 0, 'C');
+$pdf->SetX(110);
+$pdf->Cell(85, 3, 'dd/mm/yyyy', 0, 1, 'C');
 
-//Títulos de las columnas
-$headerTratamiento = array('Descripcion', 'Observacion', 'Estado', 'Fecha');
-$pdf->AliasNbPages();
-
-//$pdf->AddPage();
-$pdf->TablaProcedimientos($headerTratamiento, $planTratamiento);
-
-/**
- * HISTORIAL DE VISITAS
- */
-$pdf->AddPage();
-$pdf->SetFont('Arial', 'B', 14);
-$pdf->Cell(80, 10, 'Historial de visitas', 0, 'L');
-
-$pdf->Ln(8);
-
-//Títulos de las columnas
-$headerVisitas = array('Motivo', 'Fecha', 'Procedimiento Referencial', 'Cancelado');
-$pdf->AliasNbPages();
-
-//$pdf->AddPage();
-$pdf->TablaVisitas($headerVisitas, $historialVisitas);
-
-/**
- * MANDAR EL PDF A UNA NUEVA VENTANA
- */
+// Generar PDF
 $pdf->Output();
+?>

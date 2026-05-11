@@ -16,7 +16,8 @@ $(".table").on("click", ".btnEditarPaciente", function () {
     success: function (respuesta) {
       $("#editarNombrePaciente").val(respuesta["NombrePaciente"]);
       $("#editarApellidoPaciente").val(respuesta["ApellidoPaciente"]);
-      $("#editarDNIPaciente").val(respuesta["DNIPaciente"]);
+      $("#editarTipoIdentificacion").val(respuesta["TipoIdentificacion"]);
+      $("#editarDNIPaciente").val(respuesta["NumeroIdentificacion"]);
       $("#editarCelularPaciente").val(respuesta["CelularPaciente"]);
       $("#codPaciente").val(respuesta["IdPaciente"]);
     }

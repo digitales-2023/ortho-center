@@ -7,6 +7,7 @@ require_once "../model/historias.model.php";
 require_once "../controller/tratamiento.controller.php";
 require_once "../model/tratamiento.model.php";
 
+
 class AjaxPacientes
 {
   //  Editar Socio
@@ -18,7 +19,7 @@ class AjaxPacientes
     echo json_encode($respuesta);
   }
 
-  //  Buscar al paciente por el número del DNI para crear un nuevo pago
+  //  Buscar al paciente por el número del DNI
   public $numeroDNI;
   public function ajaxBuscarDNI()
   {
@@ -27,12 +28,20 @@ class AjaxPacientes
     echo json_encode($respuesta);
   }
 
-  //  Buscar el número de DNI para crear un historia clínica
   public $numeroDNIBuscar;
   public function ajaxBuscarPacienteDNI()
   {
     $numeroDNIBuscar = $this->numeroDNIBuscar;
     $respuesta = ControllerPacientes::ctrVerificarNumeroDNI($numeroDNIBuscar);
+    echo json_encode($respuesta);
+  }
+
+  //  Buscar el número de DNI para crear una historia a través de la cotizacion
+  public $numeroDNICotizacion;
+  public function ajaxBuscarPacienteCotizacion()
+  {
+    $numeroDNICotizacion = $this->numeroDNICotizacion;
+    $respuesta = ControllerPacientes::ctrVerificarDNICotizacion($numeroDNICotizacion);
     echo json_encode($respuesta);
   }
 
@@ -72,4 +81,11 @@ if(isset($_POST["numeroDNICita"])){
 	$verificarDNICita = new AjaxPacientes();
 	$verificarDNICita -> numeroDNICita = $_POST["numeroDNICita"];
 	$verificarDNICita -> ajaxBuscarPacienteDNICita();
+}
+
+//  Verificar el numero de DNI para crear cotizaciones
+if(isset($_POST["numeroDNICotizacion"])){
+	$verificarDNICotizacion = new AjaxPacientes();
+	$verificarDNICotizacion -> numeroDNICotizacion = $_POST["numeroDNICotizacion"];
+	$verificarDNICotizacion -> ajaxBuscarPacienteCotizacion();
 }

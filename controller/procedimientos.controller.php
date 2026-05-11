@@ -150,6 +150,8 @@ class ControllerProcedimientos
   {
     $tabla = "tba_procedimiento";
     $datosProcedimiento = ModelProcedimientos::mdlObtenerDatosProcedimiento($tabla, $codProcedimientoAgregar);
+    $listaMedicos = ControllerSocios::ctrMostrarSociosPorTipo(1);
+    array_push($datosProcedimiento, $listaMedicos);
     return $datosProcedimiento;
   }
 

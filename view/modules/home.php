@@ -15,7 +15,7 @@
           <li class="breadcrumb-item active">Inicio</li>
         </ol>
         <div class="row">
-          <div class="col-xl-4 col-md-6">
+          <div class="col-xl-3 col-md-6">
             <div class="card bg-primary text-white mb-4">
               <div class="card-body">
                 <?php 
@@ -29,18 +29,35 @@
               </div>
             </div>
           </div>
-          <div class="col-xl-4 col-md-6">
-            <div class="card bg-success text-white mb-4">
+          <div class="col-xl-3 col-md-6">
+            <div class="card bg-warning text-white mb-4">
               <div class="card-body">
-                Citas registradas hoy: 0
+                <?php
+                  $mayorCostoMes = ControllerCostos::ctrSumarCostosMesActual();
+                  echo 'Costo Total del Mes (S/.) : '.$mayorCostoMes["suma_mes"];
+                ?>
               </div>
               <div class="card-footer d-flex align-items-center justify-content-between">
-                <a class="small text-white stretched-link" href="#">Ver Detalles</a>
+                <a class="small text-white stretched-link" href="allCostos">Ver Detalles</a>
                 <div class="small text-white"><i class="fas fa-angle-right"></i></div>
               </div>
             </div>
           </div>
-          <div class="col-xl-4 col-md-6">
+          <div class="col-xl-3 col-md-6">
+            <div class="card bg-success text-white mb-4">
+              <div class="card-body">
+                <?php
+                  $citasRegistradas = ControllerCitas::ctrSumarCitasHoy();
+                  echo 'Citas Registradas hoy : '.$citasRegistradas["TotalCitas"];
+                ?>
+              </div>
+              <div class="card-footer d-flex align-items-center justify-content-between">
+                <a class="small text-white stretched-link" href="programacionCitas">Ver Detalles</a>
+                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-md-6">
             <div class="card bg-danger text-white mb-4">
               <div class="card-body">
               <?php

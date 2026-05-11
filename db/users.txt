@@ -1,0 +1,8 @@
+
+Nuevas credenciales:
+actualizar las credenciales
+
+http://localhost:8081/OrthocenterPro/ortho-center/update_admin.php
+
+Email: admin@orthocenter.pe
+Contraseña: #orthocenter20

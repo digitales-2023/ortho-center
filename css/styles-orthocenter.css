@@ -32,3 +32,24 @@
   height: 45px;
   padding-left: 30px;
 }
+
+/* Espaciado mejorado para iconos en menú anidado */
+.sb-sidenav-menu-nested .nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-left: 0;
+  padding-right: 1rem;
+}
+
+.sb-sidenav-menu-nested .sb-nav-link-icon {
+  margin-right: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.5rem;
+}
+
+.sb-sidenav-menu-nested .nav-link .sb-nav-link-icon i {
+  font-size: 0.9rem;
+}

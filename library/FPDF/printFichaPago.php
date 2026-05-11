@@ -28,7 +28,7 @@ class PDFHistoriaClinica extends TFPDF
     $this->Ln(15);
     $this->Cell(80);
     $this->SetFont('Arial', 'B', 15);
-    $this->Cell(30 ,10, utf8_decode('FICHA DE PAGO'), 0, 0, 'C');
+    $this->Cell(30 ,10, html_entity_decode('FICHA DE PAGO'), 0, 0, 'C');
 
     
     // Salto de línea
@@ -51,11 +51,12 @@ class PDFHistoriaClinica extends TFPDF
   function TablaProcedimientosRealizados($header, $listaTratamiento)
   {
     $this->SetFont('Arial', 'B', 10);
-    $this->Cell(60,7,$header[0],1,0,'C'); 
-    $this->Cell(50,7,$header[1],1,0,'C'); 
-    $this->Cell(25,7,$header[2],1,0,'C'); 
+    $this->Cell(55,7,$header[0],1,0,'C'); 
+    $this->Cell(35,7,$header[1],1,0,'C'); 
+    $this->Cell(30,7,$header[2],1,0,'C'); 
     $this->Cell(25,7,$header[3],1,0,'C'); 
-    $this->Cell(25,7,$header[4],1,0,'C'); 
+    $this->Cell(20,7,$header[4],1,0,'C'); 
+    $this->Cell(20,7,$header[5],1,0,'C'); 
     
     foreach($listaTratamiento as $dato)
     {
@@ -67,11 +68,12 @@ class PDFHistoriaClinica extends TFPDF
         $fecha = $dato["FechaProcedimiento"];
       }
       $this->Ln();
-      $this->Cell(60,5,$dato["NombreProcedimiento"],1);
-      $this->Cell(50,5,$dato["ObservacionProcedimiento"],1);
+      $this->Cell(55,5,$dato["NombreProcedimiento"],1);
+      $this->Cell(35,5,$dato["ObservacionProcedimiento"],1);
+      $this->Cell(30,5,$dato["NombreSocio"],1);
       $this->Cell(25,5,$estado,1);
-      $this->Cell(25,5,$fecha,1);
-      $this->Cell(25,5,'(S/.) '.$dato["PrecioProcedimiento"],1);
+      $this->Cell(20,5,$fecha,1);
+      $this->Cell(20,5,$dato["PrecioProcedimiento"],1);
     }
   }
 
@@ -99,7 +101,7 @@ class PDFHistoriaClinica extends TFPDF
       $this->Cell(50,5,$dato["ObservacionProcedimiento"],1);
       $this->Cell(25,5,$estado,1);
       $this->Cell(25,5,$fecha,1);
-      $this->Cell(25,5,'(S/.) '.$dato["PrecioProcedimiento"],1);
+      $this->Cell(25,5,$dato["PrecioProcedimiento"],1);
     }
   }
 
@@ -109,8 +111,9 @@ class PDFHistoriaClinica extends TFPDF
     $this->SetX(25);
     $this->SetFont('Arial', 'B', 10);
     $this->Cell(40,7,$header[0],1,0,'C');
-    $this->Cell(25,7,$header[1],1,0,'C');
-    $this->Cell(90,7,$header[2],1,0,'C');
+    $this->Cell(40,7,$header[1],1,0,'C');
+    $this->Cell(25,7,$header[2],1,0,'C');
+    $this->Cell(50,7,$header[3],1,0,'C');
     
     foreach($listaPagos as $dato)
     {
@@ -118,9 +121,10 @@ class PDFHistoriaClinica extends TFPDF
       
       $this->Ln();
       $this->SetX(25);
-      $this->Cell(40,5,'(S/.) '.$dato["TotalPagado"],1);
+      $this->Cell(40,5,$dato["DescripcionTipo"],1);
+      $this->Cell(40,5,$dato["TotalPago"],1);
       $this->Cell(25,5,$dato["FechaPago"],1);
-      $this->Cell(90,5,$dato["ObservacionPago"],1);
+      $this->Cell(50,5,$dato["ObservacionPago"],1);
     }
   }
 }
@@ -130,7 +134,7 @@ $codPaciente = $_GET["codPaciente"];
 $datosPaciente = ControllerPacientes::ctrMostrarDatosImprimir($codPaciente);
 $codHistoria = ControllerHistorias::ctrObtenerCodHistoria($codPaciente);
 
-//  Pagos realizados -> CAMBIAR FICHA DE PAGO
+//  Pagos realizados
 $listaPagos = ControllerPagos::ctrMostrarPagosPorPaciente($codPaciente);
 
 // Creacion de los datos de la historia clínica
@@ -151,12 +155,16 @@ $pdf->Cell(35,8,'Nombre Paciente:',0);
 $pdf->SetFont('DejaVu', '', 10);
 $pdf->Cell(80,8,$datosPaciente["NombrePaciente"].' '.$datosPaciente["ApellidoPaciente"],0);
 $pdf->SetFont('Arial','B',10);
-$pdf->Cell(10,8,'DNI:',0);
+$pdf->Cell(10,8,$datosPaciente["TipoIdentificacion"].':',0);
 $pdf->SetFont('DejaVu', '', 10);
-$pdf->Cell(25,8,$datosPaciente["DNIPaciente"],0);
+$pdf->Cell(25,8,$datosPaciente["NumeroIdentificacion"],0);
 
 $pdf->Ln(8);
 
+$pdf->SetFont('Arial','B',10);
+$pdf->Cell(35,8,'Fecha Nacimiento:',0);
+$pdf->SetFont('DejaVu', '', 10);
+$pdf->Cell(25,8,$datosPaciente["FechaNacimiento"],0);
 $pdf->SetFont('Arial','B',10);
 $pdf->Cell(15,8,'Celular:',0);
 $pdf->SetFont('DejaVu', '', 10);
@@ -175,34 +183,39 @@ $pdf->Ln(10);
  */
 $totalesTratamiento = ControllerTratamiento::ctrObtenerTotalesTratamiento($codPaciente);
 $totalRealizado = ControllerTratamiento::ctrObtenerTotalRealizado($codHistoria["IdHistoriaClinica"]);
-$deudaRealizados = number_format($totalRealizado["TotalRealizado"]-$totalesTratamiento["TotalPagado"], 2);
+
+$montoPresupuestado = (float)($totalesTratamiento["TotalTratamiento"] ?? 0);
+$montoTotalPagado = (float)($totalesTratamiento["TotalPagado"] ?? 0);
+$saldoPresupuestado = (float)($totalesTratamiento["DeudaActual"] ?? 0);
+$montoTotalRealizado = (float)($totalRealizado["TotalRealizado"] ?? 0);
+$deudaRealizados = number_format($montoTotalRealizado - $montoTotalPagado, 2, '.', '');
 
 $pdf->SetFont('Arial','B',10);
 $pdf->Cell(40,8,'Monto Presupuestado:',0);
 $pdf->SetFont('DejaVu', '', 10);
-$pdf->Cell(70,8,'S/. '.number_format($totalesTratamiento["TotalTratamiento"],2),0);
+$pdf->Cell(70,8,'S/. '.number_format($montoPresupuestado, 2, '.', ''),0);
 $pdf->SetFont('Arial','B',10);
-$pdf->Cell(40,8,'Total Realizado:',0);
+$pdf->Cell(40,8,'Total Realizados:',0);
 $pdf->SetFont('DejaVu', '', 10);
-$pdf->Cell(30,8,'S/. '.number_format($totalRealizado["TotalRealizado"],2),0);
+$pdf->Cell(30,8,'S/. '.number_format($montoTotalRealizado, 2, '.', ''),0);
 
 $pdf->Ln(5);
 
 $pdf->SetFont('Arial','B',10);
 $pdf->Cell(40,8,'Total Cancelado:',0);
 $pdf->SetFont('DejaVu', '', 10);
-$pdf->Cell(70,8,'S/. '.number_format($totalesTratamiento["TotalPagado"],2),0);
+$pdf->Cell(70,8,'S/. '.number_format($montoTotalPagado, 2, '.', ''),0);
 $pdf->SetFont('Arial','B',10);
 $pdf->Cell(40,8,'Total Cancelado:',0);
 $pdf->SetFont('DejaVu', '', 10);
-$pdf->Cell(30,8,'S/. '.number_format($totalesTratamiento["TotalPagado"],2),0);
+$pdf->Cell(30,8,'S/. '.number_format($montoTotalPagado, 2, '.', ''),0);
 
 $pdf->Ln(5);
 
 $pdf->SetFont('Arial','B',10);
 $pdf->Cell(40,8,'Saldo Presupuestado:',0);
 $pdf->SetFont('DejaVu', '', 10);
-$pdf->Cell(70,8,'S/. '.number_format($totalesTratamiento["DeudaActual"],2),0);
+$pdf->Cell(70,8,'S/. '.number_format($saldoPresupuestado, 2, '.', ''),0);
 $pdf->SetFont('Arial','B',10);
 $pdf->Cell(40,8,'Saldo Actual:',0);
 $pdf->SetFont('DejaVu', '', 10);
@@ -220,7 +233,7 @@ $pdf->SetFont('Arial','B',14);
 $pdf->Cell(80,10,'Lista de Procedimientos Realizados',0,'L');
 
 //Títulos de las columnas
-$header=array('Descripcion','Observacion','Estado','Fecha','Precio');
+$header=array('Descripcion','Observacion', 'Medico', 'Estado','Fecha','Precio (S/.)');
 $pdf->AliasNbPages();
 
 //$pdf->AddPage();
@@ -228,22 +241,25 @@ $pdf->TablaProcedimientosRealizados($header, $planTratamiento);
 
 $pdf->Ln(10);
 
+
 /**
  * PLAN DE TRATAMIENTO DEL PACIENTE
  */
+//  Plan de Tratamiento
 $planTratamiento = ControllerTratamiento::ctrMostrarDetalleTratamientoFaltante($codHistoria["IdHistoriaClinica"]);
 
 $pdf->SetFont('Arial','B',14);
 $pdf->Cell(80,10,'Lista de Procedimientos Faltantes',0,'L');
 
 //Títulos de las columnas
-$header=array('Descripcion','Observacion','Estado','Fecha','Precio');
+$header=array('Descripcion','Observacion','Estado','Fecha','Precio (S/.)');
 $pdf->AliasNbPages();
 
 //$pdf->AddPage();
 $pdf->TablaProcedimientosFaltantes($header, $planTratamiento);
 
 $pdf->Ln(10);
+
 
 /**
  * PAGOS REALIZADOS
@@ -252,11 +268,15 @@ $pdf->SetFont('Arial','B',14);
 $pdf->Cell(80,10,'Lista de Pagos Realizado',0,'L');
 
 //Títulos de las columnas
-$header=array('Total Pagado','Fecha Pago','Observacion');
+$header=array('Tipo Pago','Total Pagado (S/.)','Fecha Pago','Observacion');
 $pdf->AliasNbPages();
 
 //$pdf->AddPage();
 $pdf->TablaPagos($header, $listaPagos);
 
+
+if (ob_get_length()) {
+  ob_end_clean();
+}
 
 $pdf->Output();

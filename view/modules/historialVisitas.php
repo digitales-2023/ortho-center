@@ -11,12 +11,13 @@
     <div class="container-fluid px-4">
       <h1 class="mt-4">
         <?php
-
+        $codPaciente = $_GET["codPaciente"];
+        $datosPaciente = ControllerPacientes::ctrMostrarDatosTratamiento($codPaciente);
+        $codTratamiento = ControllerTratamiento::ctrObtenerCodigoTratamiento($codPaciente);
+        $datosTratamiento = ControllerTratamiento::ctrMostrarTotalTratamiento($codTratamiento["IdTratamiento"]);
         if ($_GET["codPaciente"] && $_GET["codHistoria"]) {
-          $codPaciente = $_GET["codPaciente"];
-          $datosPaciente = ControllerPacientes::ctrMostrarDatosTratamiento($codPaciente);
-          echo 'Historial de Visitas: ' . $datosPaciente["NombrePaciente"] . ' ' . $datosPaciente["ApellidoPaciente"];
           $listarProcedimientos = ControllerTratamiento::ctrListarProcedimientosPaciente($codPaciente);
+          echo 'Historial de Visitas: ' . $datosPaciente["NombrePaciente"] . ' ' . $datosPaciente["ApellidoPaciente"];
         } else {
           echo 'No hay datos del paciente';
         }
@@ -30,7 +31,6 @@
         <!-- Cabecera -->
         <span class="border border-3 p-3">
           <div class="container row g-3">
-
             <div class="container row g-3 p-3 justify-content-between">
               <h3 class="col-3 d-inline-flex-center">Datos Paciente</h3>
             </div>
@@ -43,8 +43,8 @@
 
             <!-- Numero de DNI -->
             <div class="col-md-4">
-              <label for="numeroDNI" class="form-label" style="font-weight: bold">DNI: </label>
-              <input type="text" class="form-control" value="<?php echo $datosPaciente["DNIPaciente"] ?>" readonly>
+              <label for="numeroDNI" class="form-label" style="font-weight: bold"><?php echo $datosPaciente["TipoIdentificacion"] . ':' ?></label>
+              <input type="text" class="form-control" value="<?php echo $datosPaciente["NumeroIdentificacion"] ?>" readonly>
             </div>
 
             <!-- Edad -->
@@ -71,62 +71,48 @@
             </div>
 
             <div class="row" style="font-weight: bold">
-              <div class="col-lg-3">Motivo</div>
+              <div class="col-lg-4">Motivo</div>
               <div class="col-lg-2">Fecha</div>
-              <div class="col-lg-2">Procedimiento Ref.</div>
-              <div class="col-lg-1">Costo(S/.)</div>
-              <div class="col-lg-2">Pagado(S/.)</div>
-              <div class="col-lg-2">Saldo(S/.)</div>
+              <div class="col-lg-3">Procedimiento Ref.</div>
+              <div class="col-lg-3">Observación</div>
             </div>
 
             <div class="form-group row nuevaVisitaAgregar">
               <?php
-
               $listaVisitas = ControllerVisitas::ctrMostrarVisitasPaciente($_GET["codHistoria"]);
               foreach ($listaVisitas as $value) {
-
-                if ($value["PrecioProcedimiento"] != "" || $value["PrecioProcedimiento"] != null) {
-                  $saldo = number_format($value["PrecioProcedimiento"] - $value["TotalPagado"], 2);
+                if ($value["ObservacionVisita"] != null || $value["ObservacionVisita"] != '') {
+                  $observacionVisita = $value["ObservacionVisita"];
                 } else {
-                  $saldo = "";
+                  $observacionVisita = 'Otro';
                 }
 
                 echo '
-                        <div class="row" style="padding:5px 15px">
-                          <!-- Motivo Visita -->     
-                          <div class="col-lg-3" style="padding-right:0px">
-                            <div class="input-group">
-                              <span class="input-group-addon"><button type="button" class="btn btn-danger btn-xs eliminarVisita" codVisita="' . $value["IdVisita"] . '"><i class="fa fa-times"></i></button></span>
-                              <input type="text" class="form-control motivoVisitaGuardada" codVisita="' . $value["IdVisita"] . '" value="' . $value["MotivoVisita"] . '" readonly>
-                            </div>
-                          </div>
-  
-                          <!-- Fecha de visita -->
-                          <div class="col-lg-2">
-                            <input type="date" class="form-control fechaVisitaGuardada" name="fechaVisitaGuardada" id="fechaVisitaGuardada" value="' . $value["FechaVisita"] . '" readonly>
-                          </div>
+                  <div class="row" style="padding:5px 15px">
+                    <!-- Motivo Visita -->     
+                    <div class="col-lg-3" style="padding-right:0px">
+                      <div class="input-group">
+                        <span class="input-group-addon"><button type="button" class="btn btn-danger btn-xs eliminarVisita" codVisita="' . $value["IdVisita"] . '"><i class="fa fa-times"></i></button></span>
+                        <input type="text" class="form-control motivoVisitaGuardada" codVisita="' . $value["IdVisita"] . '" value="' . $value["MotivoVisita"] . '" readonly>
+                      </div>
+                    </div>
 
-                          <!-- Nombre Procedimiento -->
-                          <div class="col-lg-2">
-                            <input  type="text" class="form-control referenciaVisitaGuardada" name="referenciaVisitaGuardada" id="referenciaVisitaGuardada" value="' . $value["NombreProcedimiento"] . '" readonly>
-                          </div>
+                    <!-- Fecha de visita -->
+                    <div class="col-lg-2">
+                      <input type="date" class="form-control fechaVisitaGuardada" name="fechaVisitaGuardada" id="fechaVisitaGuardada" value="' . $value["FechaVisita"] . '" readonly>
+                    </div>
 
-                          <!-- Costo Procedimiento -->
-                          <div class="col-lg-1">
-                            <input  type="text" class="form-control costoProcedimientoGuardada" name="costoProcedimientoGuardada" id="costoProcedimientoGuardada" value="' . $value["PrecioProcedimiento"] . '" readonly>
-                          </div>
+                    <!-- Nombre Procedimiento -->
+                    <div class="col-lg-3">
+                      <input  type="text" class="form-control referenciaVisitaGuardada" name="referenciaVisitaGuardada" id="referenciaVisitaGuardada" value="' . $observacionVisita . '" readonly>
+                    </div>
 
-                          <!-- A cuenta del procedimiento -->
-                          <div class="col-lg-2">
-                            <input type="number" class="form-control acuentaProcedimientoGuardada" name="acuentaProcedimientoGuardada" id="acuentaProcedimientoGuardada" value="' . $value["TotalPagado"] . '" readonly>
-                          </div>
-
-                          <!-- Saldo -->
-                          <div class="col-lg-2">
-                            <input type="number" class="form-control saldoProcedimientoGuardada" name="saldoProcedimientoGuardada" id="saldoProcedimientoGuardada" value="' . $saldo . '" readonly>
-                          </div> 
-                        </div>
-                      ';
+                    <!-- Observación -->
+                    <div class="col-lg-3">
+                      <input  type="text" class="form-control observacionVisitaGuardada" name="observacionVisitaGuardada" id="observacionVisitaGuardada" value="' . $value["NombreProcedimiento"] . '" readonly>
+                    </div>
+                  </div>
+              ';
               }
               ?>
               <input type="hidden" id="listarNuevaListaVisitas" name="listarNuevaListaVisitas">
@@ -199,22 +185,10 @@ $editarVisitas->ctrEditarVisitas();
             </select>
           </div>
 
-          <!-- Costo Procedimiento -->
+          <!-- Observacion Visita -->
           <div class="form-group">
-            <label for="costoProcedimiento" class="col-form-label">Costo de Procedimiento:</label>
-            <input type="text" class="form-control costoProcedimientoForm" id="costoProcedimientoForm" name="costoProcedimientoForm" readonly>
-          </div>
-
-          <!-- Pago a cuenta -->
-          <div class="form-group">
-            <label for="pagoVisita" class="col-form-label">A cuenta:</label>
-            <input type="text" class="form-control pagoVisitaForm" id="pagoVisitaForm" name="pagoVisitaForm">
-          </div>
-
-          <!-- Saldo Procedimiento -->
-          <div class="form-group">
-            <label for="saldoProcedimiento" class="col-form-label">Saldo:</label>
-            <input type="text" class="form-control saldoProcedimientoForm" id="saldoProcedimientoForm" name="saldoProcedimientoForm" readonly>
+            <label for="observacionVisita" class="col-form-label">Observación de visita:</label>
+            <input type="text" class="form-control observacionVisitaForm" id="observacionVisitaForm" name="observacionVisitaForm" required>
           </div>
 
           <div class="modal-footer">

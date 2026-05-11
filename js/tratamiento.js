@@ -72,6 +72,13 @@ $(".formularioPlanTratamiento").on("change", "input.editarPrecioTratamiento", fu
   sumaProcedimientosTratamiento();
 });
 
+//  Actualizar al modificar el precio
+$(".formularioPlanTratamiento").on("change", "select.editarMedicoProcedimiento", function(){
+  listarProcedimientosTratamiento();
+  sumaProcedimientosTratamiento();
+});
+
+
 //  Agregar nuevos procedimientos al plan de tratamiento
 $(".tablaProcedimientosEditar").on("click", ".btnAgregarProcedimiento", function(){
   var codProcedimientoAgregar = $(this).attr("codProcedimiento");
@@ -91,6 +98,13 @@ $(".tablaProcedimientosEditar").on("click", ".btnAgregarProcedimiento", function
       var idProcedimiento = respuesta["IdProcedimiento"];
       var nombreProcedimiento = respuesta["NombreProcedimiento"];
       var precioPromedio = respuesta["PrecioPromedio"];
+      var listaMedicos = respuesta[3];
+
+      //  Opciones de los medicos registrados
+      var opcionesSelect = "";
+      listaMedicos.forEach(element => {
+        opcionesSelect += '<option value="'+element["IdSocio"]+'">'+element["NombreSocio"]+'</option>';
+      });
 
       $(".nuevoProcedimientoAgregar").append(
       '<div class="row" style="padding:5px 15px">'+
@@ -104,14 +118,22 @@ $(".tablaProcedimientosEditar").on("click", ".btnAgregarProcedimiento", function
         '</div>'+
 
         '<!-- Observacion -->'+
-        '<div class="col-lg-3 observacionProcedimiento">'+
+        '<div class="col-lg-2 observacionProcedimiento">'+
           '<input type="text" class="form-control editarObservacionProcedimiento" name="editarObservacionProcedimiento">'+
         '</div>' +
 
+        '<!-- Médico -->'+
+        '<div class="col-lg-2 medicoProcedimiento">'+
+          '<select class="form-select editarMedicoProcedimiento" name="editarMedicoProcedimiento" id="editarMedicoProcedimiento">'+
+          '<option selected="true" value="" disabled>Elige una opcion</option>'+
+            opcionesSelect+
+          '</select>'+
+        '</div>' +
+
         '<!-- Estado -->'+
-        '<div class="col-lg-2 form-check form-switch estadoProcedimiento">'+
+        '<div class="col-lg-1 form-check form-switch estadoProcedimiento">'+
           '<input type="checkbox" class="form-check-input editarEstadoProcedimiento" name="editarEstadoProcedimiento" id="editarEstadoProcedimiento">'+
-          '<label class="form-check-label" for="editarEstadoProcedimiento">Intervencion Realizada</label>'+
+          '<label class="form-check-label" for="editarEstadoProcedimiento">Realizado</label>'+
         '</div>' +
 
         '<!-- Fecha del Procedimiento -->'+
@@ -121,7 +143,7 @@ $(".tablaProcedimientosEditar").on("click", ".btnAgregarProcedimiento", function
 
         '<!-- Precio del procedimiento -->'+
         '<div class="col-lg-2 precioProcedimiento">'+
-          '<input type="number" class="form-control editarPrecioTratamiento" name="editarPrecioTratamiento" min="0.00" step="0.01" value="'+precioPromedio+'" required>'+
+          '<input type="number" class="form-control editarPrecioTratamiento" name="editarPrecioTratamiento" min="1.00" step="0.01" value="'+precioPromedio+'" required>'+
         '</div>' +
 
       '</div>'
@@ -135,12 +157,14 @@ $(".tablaProcedimientosEditar").on("click", ".btnAgregarProcedimiento", function
 	});
 });
 
+
 //  FUNCIONES PARA SUMAR Y LISTAR LOS PROCEDIMIENTOS
 function listarProcedimientosTratamiento()
 {
   var listarProcedimientos = [];
   var procedimiento = $(".editarProcedimiento");
   var observacion = $(".editarObservacionProcedimiento");
+  var medico = $(".editarMedicoProcedimiento");
   var estado = $(".editarEstadoProcedimiento");
   var fecha = $(".editarFechaIntervencion");
   var precio = $(".editarPrecioTratamiento");
@@ -150,6 +174,7 @@ function listarProcedimientosTratamiento()
     listarProcedimientos.push({
       "CodProcedimiento" : $(procedimiento[i]).attr("codProcedimiento"),
       "ObservacionProcedimiento" : $(observacion[i]).val(),
+      "MedicoProcedimiento" : $(medico[i]).val(),
       "PrecioProcedimiento" : $(precio[i]).val(),
       "EstadoProcedimiento" : $(estado[i]).prop('checked'),
       "FechaProcedimiento" : $(fecha[i]).val(),
@@ -180,3 +205,21 @@ function sumaProcedimientosTratamiento()
 
   $("#editarTotalTratamiento").val(sumaTotalTratamiento.toFixed(2));
 }
+
+$("#btnDescargarTratamiento").on("click", function(){
+  codHistoria = $(this).attr('codHistoria');
+  codPaciente = $(this).attr('codPaciente');
+  if(codHistoria != null || codHistoria != undefined || codHistoria != '')
+  {
+    window.open("library/FPDF/printPlanTratamiento.php?&codHistoria="+codHistoria+'&codPaciente='+codPaciente, "_blank");
+  }
+  else
+  {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: '¡No se encontró una Historia Clínica!',
+    });
+  }
+});
+

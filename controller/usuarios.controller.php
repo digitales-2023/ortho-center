@@ -59,8 +59,8 @@ class ControllerUsuarios
         "NombreUsuario" => $_POST["nombreUsuario"],
         "CorreoUsuario" => $_POST["correoUsuario"],
         "PasswordUsuario" => $passwordCrypt,
-        "FechaCreacion"=>date("Y-m-d").' '.date('H:i:s'),
-        "FechaActualizacion"=>date("Y-m-d").' '.date('H:i:s'),
+        "FechaCreacion"=>date("Y-m-d\TH:i:sP"),
+        "FechaActualizacion"=>date("Y-m-d\TH:i:sP"),
       );
 
       $respuesta = ModelUsuarios::mdlIngresarUsuario($tabla, $datosCreate);
@@ -93,7 +93,7 @@ class ControllerUsuarios
         "CorreoUsuario" => $_POST["editarCorreo"],
         "IdPerfilUsuario" => $_POST["editarPerfil"],
         "IdUsuario" => $_POST["codUsuario"],
-        "FechaActualizacion"=>date("Y-m-d").' '.date('H:i:s'),
+        "FechaActualizacion"=>date("Y-m-d\TH:i:sP"),
       );
 
       $respuesta = ModelUsuarios::mdlUpdateUsuario($tabla, $datosUpdate);
