@@ -279,4 +279,64 @@ class ModelPacientes
     $statement->execute();
     return $statement->fetch();
   }
+
+  // ── GRÁFICOS / REPORTES ──────────────────────────────────────────────────
+
+  // Obtener pacientes registrados por mes en el año actual o especificado
+  public static function mdlObtenerPacientesPorMes($tabla, $año = null)
+  {
+    if ($año === null) {
+      $año = date('Y');
+    }
+
+    $query = "SELECT 
+              YEAR(FechaRegistro) as año,
+              MONTH(FechaRegistro) as mes,
+              DATE_FORMAT(FechaRegistro, '%Y-%m') as fecha_mes,
+              DATE_FORMAT(FechaRegistro, '%M %Y') as mes_nombre,
+              COUNT(*) as total_pacientes,
+              SUM(CASE WHEN FechaRegistro >= DATE_SUB(NOW(), INTERVAL 30 DAY) THEN 1 ELSE 0 END) as nuevos_ultimos_30d
+              FROM $tabla
+              WHERE YEAR(FechaRegistro) = :año
+              GROUP BY YEAR(FechaRegistro), MONTH(FechaRegistro)
+              ORDER BY mes ASC";
+
+    $statement = Conexion::conn()->prepare($query);
+    $statement->bindParam(":año", $año, PDO::PARAM_INT);
+    $statement->execute();
+    return $statement->fetchAll();
+  }
+
+  // Obtener años disponibles en los registros de pacientes
+  public static function mdlObtenerAñosPacientes($tabla)
+  {
+    $statement = Conexion::conn()->prepare("SELECT DISTINCT YEAR(FechaRegistro) as año FROM $tabla ORDER BY año DESC");
+    $statement->execute();
+    return $statement->fetchAll();
+  }
+
+  // Obtener total acumulado de pacientes por mes
+  public static function mdlObtenerPacientesAcumuladosPorMes($tabla, $año = null)
+  {
+    if ($año === null) {
+      $año = date('Y');
+    }
+
+    $query = "SELECT 
+              MONTH(FechaRegistro) as mes,
+              DATE_FORMAT(FechaRegistro, '%M') as mes_nombre,
+              COUNT(*) as total_mes,
+              (SELECT COUNT(*) FROM $tabla t2 WHERE YEAR(t2.FechaRegistro) <= :año AND MONTH(t2.FechaRegistro) <= MONTH(FechaRegistro) AND YEAR(t2.FechaRegistro) = :año2) as total_acumulado
+              FROM $tabla
+              WHERE YEAR(FechaRegistro) = :año3
+              GROUP BY MONTH(FechaRegistro)
+              ORDER BY mes ASC";
+
+    $statement = Conexion::conn()->prepare($query);
+    $statement->bindParam(":año", $año, PDO::PARAM_INT);
+    $statement->bindParam(":año2", $año, PDO::PARAM_INT);
+    $statement->bindParam(":año3", $año, PDO::PARAM_INT);
+    $statement->execute();
+    return $statement->fetchAll();
+  }
 }

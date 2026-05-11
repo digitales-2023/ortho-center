@@ -89,3 +89,9 @@ if(isset($_POST["numeroDNICotizacion"])){
 	$verificarDNICotizacion -> numeroDNICotizacion = $_POST["numeroDNICotizacion"];
 	$verificarDNICotizacion -> ajaxBuscarPacienteCotizacion();
 }
+
+//  Obtener años disponibles para gráficos
+if(isset($_POST["accion"]) && $_POST["accion"] == "obtenerAños"){
+	$años = ControllerPacientes::ctrObtenerAñosPacientes();
+	echo json_encode($años);
+}

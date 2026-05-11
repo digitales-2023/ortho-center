@@ -323,4 +323,30 @@ class ControllerPacientes
 
     return $respuesta;
   }
+
+  // ── GRÁFICOS / REPORTES ──────────────────────────────────────────────────
+
+  // Obtener datos para gráfico de pacientes por mes
+  public static function ctrObtenerPacientesPorMes($año = null)
+  {
+    $tabla = "tba_paciente";
+    $datos = ModelPacientes::mdlObtenerPacientesPorMes($tabla, $año);
+    return $datos;
+  }
+
+  // Obtener años disponibles para filtro
+  public static function ctrObtenerAñosPacientes()
+  {
+    $tabla = "tba_paciente";
+    $años = ModelPacientes::mdlObtenerAñosPacientes($tabla);
+    return $años;
+  }
+
+  // Obtener datos acumulados de pacientes por mes
+  public static function ctrObtenerPacientesAcumuladosPorMes($año = null)
+  {
+    $tabla = "tba_paciente";
+    $datos = ModelPacientes::mdlObtenerPacientesAcumuladosPorMes($tabla, $año);
+    return $datos;
+  }
 }
